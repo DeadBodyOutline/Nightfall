@@ -2,9 +2,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/sprite.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/character.cpp
 )
 
 set(HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/sprite.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/character.h
 )
 
 set(EXECUTABLE_NAME "ld32")
