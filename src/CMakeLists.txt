@@ -14,12 +14,19 @@ set(HEADERS
 set(EXECUTABLE_NAME "ld32")
 add_executable(${EXECUTABLE_NAME} ${SOURCES} ${HEADERS})
 
-#find_library(BOX2D_LIBRARY Box2D PATHS ${PROJECT_SOURCE_DIR}/3rdparty/dependencies/Box2D/Box2D DOC "Box2D library")
-#if(NOT BOX2D_LIBRARY)
-    #message(FATAL_ERROR "Library Box2D required, but not found!")
-#endif(NOT BOX2D_LIBRARY)
-#include_directories(${PROJECT_SOURCE_DIR}/3rdparty/dependencies/Box2D/)
-#target_link_libraries(${EXECUTABLE_NAME} ${BOX2D_LIBRARY})
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/dependencies/sfml-tmxloader/include)
+
+find_library(SFMLTMXLOADER_LIBRARY tmx-loader PATHS ${PROJECT_SOURCE_DIR}/3rdparty/dependencies/sfml-tmxloader DOC "tmx-loader library")
+if(NOT SFMLTMXLOADER_LIBRARY)
+    message(FATAL_ERROR "Library tmx-loader required, but not found!")
+endif(NOT SFMLTMXLOADER_LIBRARY)
+target_link_libraries(${EXECUTABLE_NAME} ${SFMLTMXLOADER_LIBRARY})
+
+find_library(PUGI_LIBRARY pugi PATHS ${PROJECT_SOURCE_DIR}/3rdparty/dependencies/sfml-tmxloader DOC "pugi library")
+if(NOT PUGI_LIBRARY)
+    message(FATAL_ERROR "Library pugi required, but not found!")
+endif(NOT PUGI_LIBRARY)
+target_link_libraries(${EXECUTABLE_NAME} ${PUGI_LIBRARY})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules" ${CMAKE_MODULE_PATH})
 

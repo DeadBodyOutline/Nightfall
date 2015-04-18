@@ -1,6 +1,7 @@
 #include "character.h"
 
-Character::Character(const tmx::MapObject &object, const std::string &fileName)
+Character::Character(const std::string &fileName)
+//Character::Character(const tmx::MapObject &object, const std::string &fileName)
     : Sprite(fileName)
     , m_collidingEnabled(true)
 {
@@ -16,7 +17,7 @@ Character::Character(const tmx::MapObject &object, const std::string &fileName)
         //sf::Vector2f pos = tmx::BoxToSfVec(m_body->GetPosition());
     //}
 
-    this->setPosition(object.GetPosition());
+    //this->setPosition(object.GetPosition());
 }
 
 Character::~Character()

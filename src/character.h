@@ -13,7 +13,8 @@
 class Character : public Sprite
 {
 public:
-    Character(const tmx::MapObject &object);
+    Character(const std::string &fileName);
+    //Character(const tmx::MapObject &object);
     //Character(const tmx::MapObject &object, const std::string &fileName, b2World *world = nullptr);
     ~Character();
 
