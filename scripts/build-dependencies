@@ -1,0 +1,7 @@
+#!/bin/sh
+
+mkdir -p 3rdparty/build
+cd 3rdparty/build
+
+cmake ..
+make
