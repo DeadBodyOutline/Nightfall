@@ -9,59 +9,38 @@
 
 #include "character.h"
 
-using namespace std;
-
 int main(int argc, char **argv)
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "ld32");
+    sf::RenderWindow window(sf::VideoMode(800, 608), "ld32");
     sf::Clock clock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
     const sf::Time TimePerFrame = sf::seconds(1.f / 60.f); // XXX move it to a common file
 
-    sf::Vector2u windowSize = window.getSize();
-
-    sf::View view(sf::FloatRect(0, 0, windowSize.x, windowSize.y));
-    window.setView(view);
-
     // map loading
     tmx::MapLoader ml("resources/maps");
     ml.AddSearchPath("resources/tilesets");
-    //ml.AddSearchPath("resources/sprites");
     ml.Load("first.tmx");
+    //
+
+    sf::Vector2u mapSize = ml.GetMapSize();
+    sf::Vector2u windowSize = window.getSize();
+
+    sf::View view(sf::FloatRect(0, mapSize.y - windowSize.y, windowSize.x, windowSize.y));
+    window.setView(view);
+
+    Character *sheerin;
 
     const std::vector<tmx::MapLayer>& layers = ml.GetLayers();
-
-    //for (const auto& l : layers) {
-        //if (l.name == "area") {
-            //for (const auto& o : l.objects) {
-                //b2Body* b = tmx::BodyCreator::Add(o, world);
-
-                //debugBoxes.push_back(std::unique_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(6.f, 6.f))));
-                //sf::Vector2f pos = tmx::BoxToSfVec(b->GetPosition());
-                //debugBoxes.back()->setPosition(pos);
-                //debugBoxes.back()->setOrigin(3.f, 3.f);
-
-                //for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
-                    //b2Shape::Type shapeType = f->GetType();
-
-                    //if (shapeType == b2Shape::e_polygon) {
-                        //DebugShape ds;
-                        //ds.setPosition(pos);
-
-                        //b2PolygonShape* ps = (b2PolygonShape*)f->GetShape();
-                        //int count = ps->GetVertexCount();
-
-                        //for (int i = 0; i < count; i++)
-                            //ds.AddVertex(sf::Vertex(tmx::BoxToSfVec(ps->GetVertex(i)), sf::Color::Green));
-
-                        //ds.AddVertex(sf::Vertex(tmx::BoxToSfVec(ps->GetVertex(0)), sf::Color::Green));
-                        //debugShapes.push_back(ds);
-                    //}
-                //}
-            //}
-        //}
-    //}
-    //
+    for (const auto &l : layers) {
+        if (l.name == "Characters") {
+            for (const auto& o : l.objects) {
+                if (o.GetName() == "Sheerin") { // all terrain
+                    sheerin = new Character("resources/sprites/chars.png", 0, 4);
+                    sheerin->setPosition(o.GetPosition());
+                }
+            }
+        }
+    }
 
     while (window.isOpen()) {
         sf::Event event;
@@ -86,7 +65,11 @@ int main(int argc, char **argv)
             timeSinceLastUpdate -= TimePerFrame;
         }
 
+        // TODO should go to an scene or layer
+        sheerin->update(dt);
+
         window.draw(ml);
+        window.draw(*sheerin);
 
         window.display();
     }

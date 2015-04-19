@@ -8,29 +8,30 @@
 
 #include <string>
 
-#include "sprite.h"
+#include "animatedsprite.h"
 
-class Character : public Sprite
+class Character : public AnimatedSprite
 {
 public:
-    Character(const std::string &fileName);
-    //Character(const tmx::MapObject &object);
-    //Character(const tmx::MapObject &object, const std::string &fileName, b2World *world = nullptr);
+    Character(const std::string &fileName, int x, int y);
     ~Character();
-
-    //virtual void moveToPosition(sf::Vector2f point) = 0;
 
     // set if the sprite should collide or not (default = true)
     void setColliding(bool colliding);
     bool colliding();
 
+    void setPosition(int x, int y);
+    void setPosition(sf::Vector2f point);
+
     void update(sf::Time delta = sf::Time::Zero);
-    //void draw(sf::RenderTarget &target);
 
     bool collideWith(Sprite *sprite);
 
 protected:
     bool m_collidingEnabled;
+
+    int m_tileWidth;
+    int m_tileHeight;
 };
 
 #endif // __CHARACTER_H__
