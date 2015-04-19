@@ -5,6 +5,10 @@ Character::Character(const std::string &fileName, int x, int y)
     , m_collidingEnabled(true)
     , m_tileWidth(32)
     , m_tileHeight(32)
+    , m_xOffset(0)
+    , m_yOffset(2)
+    , m_xDirection(1)
+    , m_yDirection(1)
 {
     Animation animation("steady", m_tileWidth, m_tileHeight);
     animation.addFrames(x, x, y, 1.f);
@@ -38,7 +42,18 @@ void Character::setPosition(sf::Vector2f point)
     if (point == Sprite::position())
         return;
 
-    AnimatedSprite::setPosition(point.x, point.y);
+    updatePos(point);
+}
+
+void Character::setDirection(int x, int y)
+{
+    m_xDirection = x;
+    m_yDirection = y;
+
+    m_sprite.setScale(m_xDirection, m_yDirection);
+
+    // force position update
+    updatePos(m_sprite.getPosition());
 }
 
 void Character::update(sf::Time delta)
@@ -52,4 +67,12 @@ bool Character::collideWith(Sprite *sprite)
         return false;
 
     return Sprite::collideWith(sprite);
+}
+
+void Character::updatePos(sf::Vector2f point)
+{
+    float newX = point.x + m_xOffset + (m_xDirection == -1 ? m_tileWidth : 0);
+    float newY = point.y - m_yOffset + (m_yDirection == -1 ? m_tileHeight : 0);
+
+    AnimatedSprite::setPosition(newX, newY);
 }

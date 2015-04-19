@@ -23,15 +23,25 @@ public:
     void setPosition(int x, int y);
     void setPosition(sf::Vector2f point);
 
+    void setDirection(int x, int y);
+
     void update(sf::Time delta = sf::Time::Zero);
 
     bool collideWith(Sprite *sprite);
 
-protected:
+private:
+    void updatePos(sf::Vector2f point);
+
     bool m_collidingEnabled;
 
     int m_tileWidth;
     int m_tileHeight;
+
+    int m_xOffset;
+    int m_yOffset;
+
+    int m_xDirection;
+    int m_yDirection;
 };
 
 #endif // __CHARACTER_H__

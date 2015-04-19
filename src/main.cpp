@@ -29,14 +29,37 @@ int main(int argc, char **argv)
     window.setView(view);
 
     Character *sheerin;
+    std::vector<Character *> enemies;
 
     const std::vector<tmx::MapLayer>& layers = ml.GetLayers();
     for (const auto &l : layers) {
         if (l.name == "Characters") {
             for (const auto& o : l.objects) {
-                if (o.GetName() == "Sheerin") { // all terrain
+                if (o.GetName() == "Sheerin") {
                     sheerin = new Character("resources/sprites/chars.png", 0, 4);
+
                     sheerin->setPosition(o.GetPosition());
+                    sheerin->setDirection(-1, 1);
+                } else if (o.GetName() == "enemy1") {
+                    Character *enemy = new Character("resources/sprites/chars.png", 0, 7);
+
+                    enemy->setPosition(o.GetPosition());
+
+                    enemies.push_back(enemy);
+                } else if (o.GetName() == "enemy2") {
+                    Character *enemy = new Character("resources/sprites/chars.png", 5, 1);
+
+                    enemy->setPosition(o.GetPosition());
+                    enemy->setDirection(-1, 1);
+
+                    enemies.push_back(enemy);
+                } else if (o.GetName() == "enemy3") {
+                    Character *enemy = new Character("resources/sprites/chars.png", 1, 6);
+
+                    enemy->setPosition(o.GetPosition());
+                    enemy->setDirection(-1, 1);
+
+                    enemies.push_back(enemy);
                 }
             }
         }
@@ -67,9 +90,13 @@ int main(int argc, char **argv)
 
         // TODO should go to an scene or layer
         sheerin->update(dt);
+        for (auto &enemy : enemies)
+            enemy->update(dt);
 
         window.draw(ml);
         window.draw(*sheerin);
+        for (auto &enemy : enemies)
+            window.draw(*enemy);
 
         window.display();
     }
