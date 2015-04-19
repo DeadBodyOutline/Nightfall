@@ -16,6 +16,8 @@ public:
     Character(const std::string &fileName, int x, int y);
     ~Character();
 
+    void shoot(int x, int y);
+
     // set if the sprite should collide or not (default = true)
     void setColliding(bool colliding);
     bool colliding();

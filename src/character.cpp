@@ -21,6 +21,11 @@ Character::~Character()
 {
 }
 
+void Character::shoot(int x, int y)
+{
+    std::cout << "I am shooting at (" << x << ", " << y << ")!" << std::endl;
+}
+
 void Character::setColliding(bool colliding)
 {
     m_collidingEnabled = colliding;

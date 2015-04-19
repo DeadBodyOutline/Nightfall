@@ -72,38 +72,54 @@ int main(int argc, char **argv)
             if (event.type == sf::Event::Closed)
                 window.close();
 
-            if (event.type == sf::Event::KeyPressed) {
-                switch (event.key.code) {
-                    case sf::Keyboard::Escape:
-                        window.close();
-                        break;
-                    case sf::Keyboard::D:
-                    case sf::Keyboard::Right:
-                    case sf::Keyboard::L:
-                        std::cout << "RIGHT!" << std::endl;
-                        sheerin->setDirection(1, 1);
-                        break;
-                    case sf::Keyboard::A:
-                    case sf::Keyboard::Left:
-                    case sf::Keyboard::H:
-                        std::cout << "LEFT!" << std::endl;
-                        sheerin->setDirection(-1, 1);
-                        break;
-                    case sf::Keyboard::W:
-                    case sf::Keyboard::Up:
-                    case sf::Keyboard::K:
-                        std::cout << "UP!" << std::endl;
-                        break;
-                    case sf::Keyboard::S:
-                    case sf::Keyboard::Down:
-                    case sf::Keyboard::J:
-                        std::cout << "DOWN!" << std::endl;
-                        break;
-                    default:
-                        break;
+            if (event.key.code == sf::Keyboard::Escape)
+                window.close();
+
+            //if (event.type == sf::Event::MouseMoved) {
+                //if (event.mouseMove.x > sheerin->position().x)
+                    //sheerin->setDirection(1, 1);
+                //else if (event.mouseMove.x < sheerin->position().x)
+                    //sheerin->setDirection(-1, 1);
+            //}
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    sheerin->shoot(event.mouseButton.x, event.mouseButton.y);
                 }
             }
         }
+
+        float step = .3f;// TODO
+
+        // keyboard input
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            sheerin->move(step, 0);
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            sheerin->move(-step, 0);
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            sheerin->move(0, -step);
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            sheerin->move(0, step);
+        }
+
+        // mouse input
+        // TODO check difference of doing it or inside event
+        //sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        //if (mousePos.x > sheerin->position().x)
+            //sheerin->setDirection(1, 1);
+        //else if (mousePos.x < sheerin->position().x)
+            //sheerin->setDirection(-1, 1);
+
+        // TODO this give a lot of shoot, moving to inside event
+        //if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            //std::cout << "SHOOT!" << std::endl;
+        //}
 
         window.clear(sf::Color(0, 0, 0));
 
