@@ -47,6 +47,9 @@ void Character::setPosition(sf::Vector2f point)
 
 void Character::setDirection(int x, int y)
 {
+    if (x == m_xDirection)
+        return;
+
     m_xDirection = x;
     m_yDirection = y;
 
@@ -54,6 +57,7 @@ void Character::setDirection(int x, int y)
 
     // force position update
     updatePos(m_sprite.getPosition());
+    // TODO FUUUUU
 }
 
 void Character::update(sf::Time delta)
@@ -71,8 +75,15 @@ bool Character::collideWith(Sprite *sprite)
 
 void Character::updatePos(sf::Vector2f point)
 {
-    float newX = point.x + m_xOffset + (m_xDirection == -1 ? m_tileWidth : 0);
-    float newY = point.y - m_yOffset + (m_yDirection == -1 ? m_tileHeight : 0);
+    //sf::IntRect r = m_sprite.getTextureRect();
+
+    //m_sprite.setTextureRect(sf::IntRect(r.width, 0, -r.width, r.height));
+    //float newX = point.x;
+    //float newY = point.y;
+    float newX = point.x + (m_xDirection == -1 ? m_tileWidth : 0);
+    float newY = point.y - (m_yDirection == -1 ? m_tileHeight : 0);
+    //float newX = point.x + m_xOffset + (m_xDirection == -1 ? m_tileWidth : 0);
+    //float newY = point.y - m_yOffset + (m_yDirection == -1 ? m_tileHeight : 0);
 
     AnimatedSprite::setPosition(newX, newY);
 }

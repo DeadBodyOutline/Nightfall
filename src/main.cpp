@@ -73,8 +73,35 @@ int main(int argc, char **argv)
                 window.close();
 
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Escape)
-                    window.close();
+                switch (event.key.code) {
+                    case sf::Keyboard::Escape:
+                        window.close();
+                        break;
+                    case sf::Keyboard::D:
+                    case sf::Keyboard::Right:
+                    case sf::Keyboard::L:
+                        std::cout << "RIGHT!" << std::endl;
+                        sheerin->setDirection(1, 1);
+                        break;
+                    case sf::Keyboard::A:
+                    case sf::Keyboard::Left:
+                    case sf::Keyboard::H:
+                        std::cout << "LEFT!" << std::endl;
+                        sheerin->setDirection(-1, 1);
+                        break;
+                    case sf::Keyboard::W:
+                    case sf::Keyboard::Up:
+                    case sf::Keyboard::K:
+                        std::cout << "UP!" << std::endl;
+                        break;
+                    case sf::Keyboard::S:
+                    case sf::Keyboard::Down:
+                    case sf::Keyboard::J:
+                        std::cout << "DOWN!" << std::endl;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
