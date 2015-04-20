@@ -23,6 +23,9 @@ public:
     std::vector<Bullet *> bullets();
     void destroyBullet(Bullet *bullet);
 
+    // enemy only function, track target
+    void setTarget(int x, int y);
+
     sf::FloatRect boundingBox();
     // set if the sprite should collide or not (default = true)
     void setColliding(bool colliding);
@@ -60,6 +63,9 @@ private:
 
     float m_timeToIncBullet;
     float m_timeAccumulator;
+
+    sf::Vector2f m_target;
+    float m_step;
 
     std::vector<Bullet *> m_bullets;
     Sprite *m_bulletIndicator;

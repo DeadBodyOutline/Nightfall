@@ -15,6 +15,7 @@ Character::Character(const std::string &fileName, int x, int y, bool mainCharact
     , m_numBullets(m_maxNumBullets)
     , m_timeToIncBullet(2.f)
     , m_timeAccumulator(0.f)
+    , m_step(0.1f)
 {
     m_bulletIndicator = new Sprite("resources/sprites/bullet_indicator.png");
 
@@ -63,6 +64,12 @@ void Character::destroyBullet(Bullet *bullet)
 {
     m_bullets.erase(std::remove(m_bullets.begin(), m_bullets.end(), bullet), m_bullets.end());
     delete bullet;
+}
+
+// enemy only function, track target
+void Character::setTarget(int x, int y)
+{
+    m_target = sf::Vector2f(x, y);
 }
 
 sf::FloatRect Character::boundingBox()
@@ -139,6 +146,16 @@ void Character::update(sf::Time delta)
 
         //std::cout << "time: " << m_timeAccumulator << std::endl;
         //std::cout << "--" << std::endl;
+    } else {
+        sf::Vector2f posCorrection = sf::Vector2f(32, 48); // damn
+        sf::Vector2f v = sf::Vector2f(m_target.x, m_target.y) + posCorrection - position();
+
+        float angle = atan2f(v.y, v.x);
+
+        float newX = cos(angle) * m_step;
+        float newY = sin(angle) * m_step;
+
+        move(newX, newY);
     }
 
     AnimatedSprite::update(delta);

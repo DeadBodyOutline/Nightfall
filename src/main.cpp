@@ -81,6 +81,10 @@ int main(int argc, char **argv)
         }
     }
 
+    // set target
+    for (auto &enemy : enemies)
+        enemy->setTarget(reactor->position().x, reactor->position().y);
+
     while (window.isOpen()) {
         sf::Event event;
 
