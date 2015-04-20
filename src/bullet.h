@@ -15,7 +15,10 @@ public:
     ~Bullet();
 
     void run(float angle);
-    void engage();
+    void engage(sf::Vector2f pos);
+    bool engaged();
+
+    bool deleteMe();
 
     void update(sf::Time delta = sf::Time::Zero);
 
@@ -27,6 +30,9 @@ private:
     int m_tileHeight;
 
     bool m_engaged;
+    bool m_deleteMe;
+
+    float m_deleteTimeAccumulator;
 };
 
 #endif // __BULLET_H__

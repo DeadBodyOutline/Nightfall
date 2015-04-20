@@ -27,6 +27,9 @@ public:
     void setTarget(std::vector<sf::Vector2f> waypoints, sf::Vector2f end);
     bool reactorHit();
 
+    void freeze();
+    bool deleteMe();
+
     sf::FloatRect boundingBox();
     // set if the sprite should collide or not (default = true)
     void setColliding(bool colliding);
@@ -36,6 +39,7 @@ public:
     void setPosition(sf::Vector2f point);
 
     void setDirection(int x, int y);
+    int directionX(); //
 
     void update(sf::Time delta = sf::Time::Zero);
 
@@ -66,6 +70,10 @@ private:
     int m_currentTarget;
     float m_step;
     bool m_reactorHit;
+    bool m_freeze;
+
+    bool m_deleteMe;
+    float m_deleteTimeAccumulator;
 
     std::vector<Bullet *> m_bullets;
     Sprite *m_bulletIndicator;

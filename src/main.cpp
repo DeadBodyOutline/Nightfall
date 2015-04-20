@@ -44,6 +44,8 @@ int main(int argc, char **argv)
     const std::vector<tmx::MapLayer> &layers = ml.GetLayers();
     auto &objectsLayer = ml.GetLayers()[1].objects;
 
+    int enemiesIntoDarkness = 0;
+
     float enemySpawnTimeAcc = 0.f;
     for (const auto &l : layers) {
         if (l.name == "characters") {
@@ -186,13 +188,22 @@ int main(int argc, char **argv)
 
         // bullet collision with enemies
         // TODO adjust
-        auto &enemiesObjects = ml.GetLayers()[4].objects;
-        for (auto &o : enemiesObjects) {
+        for (auto &enemy : enemies) {
             for (auto &bullet : sheerin->bullets()) {
-                sf::Vector2f bPos = bullet->position() + sf::Vector2f(32, 32);
-                if (o.GetName() != "Sheerin" && o.Contains(bPos)) {
-                    bullet->engage(); // XXX should appear at the center of the enemy
-                    break;
+                if (!bullet->engaged()) {
+                    sf::Vector2f bPos = bullet->position() + sf::Vector2f(32, 32);
+
+                    if (enemy->colliding() && bullet->collideWith(enemy)) {
+                        enemy->setColliding(false);
+
+                        int direction = enemy->directionX();
+                        bullet->engage(enemy->position() - sf::Vector2f(direction == 1 ? 16 : 32, 16));
+                        enemy->freeze();
+
+                        enemiesIntoDarkness++;
+                    }
+                } else if (bullet->deleteMe()) {
+                    sheerin->destroyBullet(bullet);
                 }
             }
         }
@@ -201,6 +212,9 @@ int main(int argc, char **argv)
             if (enemy->reactorHit()) {
                 reactor->takeDamage(33); // TODO
 
+                enemies.erase(std::remove(enemies.begin(), enemies.end(), enemy), enemies.end());
+                delete enemy;
+            } else if (enemy->deleteMe()) {
                 enemies.erase(std::remove(enemies.begin(), enemies.end(), enemy), enemies.end());
                 delete enemy;
             }

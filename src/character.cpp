@@ -16,6 +16,9 @@ Character::Character(const std::string &fileName, int x, int y, bool mainCharact
     , m_currentTarget(0)
     , m_step(m_mainCharacter ? 0.1f : 0.05f)
     , m_reactorHit(false)
+    , m_freeze(false)
+    , m_deleteMe(false)
+    , m_deleteTimeAccumulator(0.f)
 {
     m_bulletIndicator = new Sprite("resources/sprites/bullet_indicator.png");
 
@@ -78,6 +81,17 @@ bool Character::reactorHit()
     return m_reactorHit;
 }
 
+void Character::freeze()
+{
+    m_freeze = true;
+    // TODO freeze state
+}
+
+bool Character::deleteMe()
+{
+    return m_deleteMe;
+}
+
 sf::FloatRect Character::boundingBox()
 {
     // XXX seems to do nothing oO
@@ -128,8 +142,26 @@ void Character::setDirection(int x, int y)
     m_sprite.setScale(m_xDirection, m_yDirection);
 }
 
+int Character::directionX()
+{
+    return m_xDirection;
+}
+
 void Character::update(sf::Time delta)
 {
+    if (m_freeze) {
+        m_deleteTimeAccumulator += delta.asSeconds();
+
+        if (m_deleteTimeAccumulator >= 8) {
+            m_deleteMe = true;
+
+            m_deleteTimeAccumulator = 0.f;
+        }
+
+        AnimatedSprite::update(delta);
+        return;
+    }
+
     // XXX use "contains" or something like that
     for (auto bullet : m_bullets) {
         if (bullet->position().x + 32 < 0 || bullet->position().y + 32 < 0  ||
