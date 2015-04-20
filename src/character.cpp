@@ -1,6 +1,6 @@
 #include "character.h"
 
-Character::Character(const std::string &fileName, int x, int y)
+Character::Character(const std::string &fileName, int x, int y, bool mainCharacter)
     : AnimatedSprite(fileName, 288, 256)
     , m_collidingEnabled(true)
     , m_tileWidth(32)
@@ -9,6 +9,12 @@ Character::Character(const std::string &fileName, int x, int y)
     , m_yOffset(2)
     , m_xDirection(1)
     , m_yDirection(1)
+    , m_weaponDecay(1.f)
+    , m_mainCharacter(mainCharacter)
+    , m_maxNumBullets(10)
+    , m_numBullets(m_maxNumBullets)
+    , m_timeToIncBullet(2.f)
+    , m_timeAccumulator(0.f)
 {
     Animation animation("steady", m_tileWidth, m_tileHeight);
     animation.addFrames(x, x, y, 1.f);
@@ -23,6 +29,9 @@ Character::~Character()
 
 void Character::shoot(int x, int y)
 {
+    if (m_numBullets <= 0)
+        return;
+
     sf::Vector2f posCorrection = sf::Vector2f(48, 16); // XXX I don't know why, but will discover someday
 
     Bullet *bullet = new Bullet("resources/sprites/darkbullet.png");
@@ -34,10 +43,13 @@ void Character::shoot(int x, int y)
     bullet->setPosition(position() - posCorrection);
 
     m_bullets.push_back(bullet);
+
+    --m_numBullets;
 }
 void Character::setWeaponDecay(float decay)
 {
     // TODO will set the weapong recharge value, near the reactor, recovers fast
+    m_weaponDecay = decay;
 }
 
 std::vector<Bullet *> Character::bullets()
@@ -109,6 +121,22 @@ void Character::update(sf::Time delta)
             destroyBullet(bullet);
         else
             bullet->update(delta);
+    }
+
+    if (m_mainCharacter) {
+        //std::cout << "Recharging: " << 1.f / m_weaponDecay << std::endl;
+        //std::cout << "Bullets: " << m_numBullets << std::endl;
+
+        m_timeAccumulator += delta.asSeconds() * (1.f / m_weaponDecay);
+        if (m_timeAccumulator >= m_timeToIncBullet) {
+            if (m_numBullets < m_maxNumBullets)
+                ++m_numBullets;
+
+            m_timeAccumulator = 0.f;
+        }
+
+        //std::cout << "time: " << m_timeAccumulator << std::endl;
+        //std::cout << "--" << std::endl;
     }
 
     AnimatedSprite::update(delta);

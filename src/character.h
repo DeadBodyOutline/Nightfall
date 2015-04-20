@@ -14,7 +14,7 @@
 class Character : public AnimatedSprite
 {
 public:
-    Character(const std::string &fileName, int x, int y);
+    Character (const std::string &fileName, int x, int y, bool mainChracter = false);
     ~Character();
 
     void shoot(int x, int y);
@@ -51,6 +51,15 @@ private:
 
     int m_xDirection;
     int m_yDirection;
+
+    float m_weaponDecay;
+    bool m_mainCharacter;
+
+    int m_maxNumBullets;
+    int m_numBullets;
+
+    float m_timeToIncBullet;
+    float m_timeAccumulator;
 
     std::vector<Bullet *> m_bullets;
 };

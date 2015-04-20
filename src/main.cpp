@@ -43,7 +43,7 @@ int main(int argc, char **argv)
         if (l.name == "Characters") {
             for (const auto& o : l.objects) {
                 if (o.GetName() == "Sheerin") {
-                    sheerin = new Character("resources/sprites/chars.png", 0, 4);
+                    sheerin = new Character("resources/sprites/chars.png", 0, 4, true);
 
                     sheerin->setPosition(o.GetPosition());
                     sheerin->setDirection(-1, 1);
