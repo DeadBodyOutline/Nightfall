@@ -40,7 +40,6 @@ int main(int argc, char **argv)
     std::vector<Character *> enemies;
     std::vector<sf::Vector2f> spawnPoints;
     std::vector<std::vector<sf::Vector2f> > wayPoints;
-    //wayPoints.reserve(3); // number of waypoints, check TMX file!
 
     const std::vector<tmx::MapLayer> &layers = ml.GetLayers();
     auto &objectsLayer = ml.GetLayers()[1].objects;
@@ -115,12 +114,12 @@ int main(int argc, char **argv)
             if (event.key.code == sf::Keyboard::Escape)
                 window.close();
 
-            //if (event.type == sf::Event::MouseMoved) {
-                //if (event.mouseMove.x > sheerin->position().x)
-                    //sheerin->setDirection(1, 1);
-                //else if (event.mouseMove.x < sheerin->position().x)
-                    //sheerin->setDirection(-1, 1);
-            //}
+            if (event.type == sf::Event::MouseMoved) {
+                if (event.mouseMove.x > sheerin->position().x)
+                    sheerin->setDirection(1, 1);
+                else if (event.mouseMove.x < sheerin->position().x)
+                    sheerin->setDirection(-1, 1);
+            }
 
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
@@ -152,7 +151,8 @@ int main(int argc, char **argv)
         }
 
         // TODO hum
-        ml.UpdateQuadTree(sf::FloatRect(sheerin->position().x + newPos.x - 32, sheerin->position().y + newPos.y, 32, 32));
+        ml.UpdateQuadTree(sf::FloatRect(sheerin->position().x + newPos.x - 16, sheerin->position().y + newPos.y, 32, 32));
+        //ml.UpdateQuadTree(sf::FloatRect(sheerin->position().x + newPos.x - 32, sheerin->position().y + newPos.y, 32, 32));
         //ml.UpdateQuadTree(sf::FloatRect(sheerin->position().x - 32, sheerin->position().y, 32, 32));
         //ml.UpdateQuadTree(sf::FloatRect(0.0f, 0.0f, windowSize.x, windowSize.y));
         sf::FloatRect tR = sheerin->boundingBox();
@@ -181,7 +181,6 @@ int main(int argc, char **argv)
             for (auto &bullet : sheerin->bullets()) {
                 if (o.Contains(bullet->position())) {
                     sheerin->destroyBullet(bullet);
-                    //std::cout << o.GetName() << std::endl;
                     break;
                 }
             }

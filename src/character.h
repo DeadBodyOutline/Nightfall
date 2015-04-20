@@ -50,9 +50,6 @@ private:
     int m_tileWidth;
     int m_tileHeight;
 
-    int m_xOffset;
-    int m_yOffset;
-
     int m_xDirection;
     int m_yDirection;
 

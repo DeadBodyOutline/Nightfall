@@ -5,8 +5,6 @@ Character::Character(const std::string &fileName, int x, int y, bool mainCharact
     , m_collidingEnabled(true)
     , m_tileWidth(32)
     , m_tileHeight(32)
-    , m_xOffset(0)
-    , m_yOffset(2)
     , m_xDirection(1)
     , m_yDirection(1)
     , m_weaponDecay(1.f)
@@ -37,7 +35,7 @@ void Character::shoot(int x, int y)
     if (m_numBullets <= 0)
         return;
 
-    sf::Vector2f posCorrection = sf::Vector2f(48, 16); // XXX I don't know why, but will discover someday
+    sf::Vector2f posCorrection = sf::Vector2f(32, 16); // XXX I don't know why, but will discover someday
 
     Bullet *bullet = new Bullet("resources/sprites/darkbullet.png");
 
@@ -82,8 +80,9 @@ bool Character::reactorHit()
 
 sf::FloatRect Character::boundingBox()
 {
+    // XXX seems to do nothing oO
     return sf::FloatRect(position().x, position().y, m_tileWidth, m_tileHeight);
-    //return sf::FloatRect(position().x - m_tileWidth, position().y, m_tileWidth, m_tileHeight);
+    //return sf::FloatRect(position().x + m_tileWidth, position().y, m_tileWidth, m_tileHeight);
     //return sf::FloatRect(position().x, position().y, m_tileWidth, m_tileHeight);
     //return m_sprite.getGlobalBounds();
 
@@ -122,11 +121,11 @@ void Character::setDirection(int x, int y)
     m_xDirection = x;
     m_yDirection = y;
 
-    m_sprite.setScale(m_xDirection, m_yDirection);
+    sf::IntRect r = m_sprite.getTextureRect();
 
-    // force position update
-    updatePos(m_sprite.getPosition());
-    // TODO FUUUUU
+    // shit fucking shit
+    m_sprite.setOrigin(m_sprite.getLocalBounds().width / 2, 0);
+    m_sprite.setScale(m_xDirection, m_yDirection);
 }
 
 void Character::update(sf::Time delta)
@@ -208,7 +207,7 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
         target.draw(*bullet, states);
 
     if (m_mainCharacter) {
-        int x = position().x - 32;
+        int x = position().x - 16;
         int y = position().y - 8;
 
         int i;
@@ -233,15 +232,8 @@ bool Character::collideWith(Sprite *sprite)
 
 void Character::updatePos(sf::Vector2f point)
 {
-    //sf::IntRect r = m_sprite.getTextureRect();
-
-    //m_sprite.setTextureRect(sf::IntRect(r.width, 0, -r.width, r.height));
-    //float newX = point.x;
-    //float newY = point.y;
-    float newX = point.x + (m_xDirection == -1 ? m_tileWidth : 0);
-    float newY = point.y - (m_yDirection == -1 ? m_tileHeight : 0);
-    //float newX = point.x + m_xOffset + (m_xDirection == -1 ? m_tileWidth : 0);
-    //float newY = point.y - m_yOffset + (m_yDirection == -1 ? m_tileHeight : 0);
+    float newX = point.x - m_tileWidth / 2;
+    float newY = point.y;
 
     AnimatedSprite::setPosition(newX, newY);
 }
