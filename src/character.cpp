@@ -16,6 +16,8 @@ Character::Character(const std::string &fileName, int x, int y, bool mainCharact
     , m_timeToIncBullet(2.f)
     , m_timeAccumulator(0.f)
 {
+    m_bulletIndicator = new Sprite("resources/sprites/bullet_indicator.png");
+
     Animation animation("steady", m_tileWidth, m_tileHeight);
     animation.addFrames(x, x, y, 1.f);
 
@@ -149,6 +151,19 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
     for (auto bullet : m_bullets)
         target.draw(*bullet, states);
+
+    if (m_mainCharacter) {
+        int x = position().x - 32;
+        int y = position().y - 8;
+
+        int i;
+        for (i = 0; i < m_numBullets; i++) {
+            m_bulletIndicator->setPosition(x, y);
+            target.draw(*m_bulletIndicator);
+
+            x += 1 + m_bulletIndicator->width();
+        }
+    }
 
     AnimatedSprite::draw(target, states);
 }

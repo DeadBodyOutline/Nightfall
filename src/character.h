@@ -62,6 +62,7 @@ private:
     float m_timeAccumulator;
 
     std::vector<Bullet *> m_bullets;
+    Sprite *m_bulletIndicator;
 };
 
 #endif // __CHARACTER_H__

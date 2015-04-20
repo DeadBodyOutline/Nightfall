@@ -19,10 +19,14 @@ public:
     void update(sf::Time delta = sf::Time::Zero);
 
 private:
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
     int m_energyLevel;
 
     int m_tileWidth;
     int m_tileHeight;
+
+    Sprite *m_energyIndicator;
 };
 
 #endif // __REACTOR_H__
