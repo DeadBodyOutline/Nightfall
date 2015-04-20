@@ -152,9 +152,6 @@ int main(int argc, char **argv)
 
         // TODO hum
         ml.UpdateQuadTree(sf::FloatRect(sheerin->position().x + newPos.x - 16, sheerin->position().y + newPos.y, 32, 32));
-        //ml.UpdateQuadTree(sf::FloatRect(sheerin->position().x + newPos.x - 32, sheerin->position().y + newPos.y, 32, 32));
-        //ml.UpdateQuadTree(sf::FloatRect(sheerin->position().x - 32, sheerin->position().y, 32, 32));
-        //ml.UpdateQuadTree(sf::FloatRect(0.0f, 0.0f, windowSize.x, windowSize.y));
         sf::FloatRect tR = sheerin->boundingBox();
         std::vector<tmx::MapObject*> objects = ml.QueryQuadTree(tR);
 
@@ -179,7 +176,8 @@ int main(int argc, char **argv)
         auto &objectsObjects = ml.GetLayers()[3].objects;
         for (auto &o : objectsObjects) {
             for (auto &bullet : sheerin->bullets()) {
-                if (o.Contains(bullet->position())) {
+                sf::Vector2f bPos = bullet->position() + sf::Vector2f(32, 32);
+                if (o.Contains(bPos)) {
                     sheerin->destroyBullet(bullet);
                     break;
                 }
@@ -191,7 +189,8 @@ int main(int argc, char **argv)
         auto &enemiesObjects = ml.GetLayers()[4].objects;
         for (auto &o : enemiesObjects) {
             for (auto &bullet : sheerin->bullets()) {
-                if (o.GetName() != "Sheerin" && o.Contains(bullet->position())) {
+                sf::Vector2f bPos = bullet->position() + sf::Vector2f(32, 32);
+                if (o.GetName() != "Sheerin" && o.Contains(bPos)) {
                     bullet->engage(); // XXX should appear at the center of the enemy
                     break;
                 }
@@ -267,8 +266,6 @@ int main(int argc, char **argv)
             do {
                 character = distr(gen);
             } while (character == 36);
-
-            std::cout << character << std::endl;
 
             Character *enemy = new Character("resources/sprites/chars.png", 0, character);
             sf::Vector2f spawnPoint = spawnPoints[p];

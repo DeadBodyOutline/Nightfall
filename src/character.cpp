@@ -9,12 +9,12 @@ Character::Character(const std::string &fileName, int x, int y, bool mainCharact
     , m_yDirection(1)
     , m_weaponDecay(1.f)
     , m_mainCharacter(mainCharacter)
-    , m_maxNumBullets(10)
+    , m_maxNumBullets(1000) // TODO 10
     , m_numBullets(m_maxNumBullets)
     , m_timeToIncBullet(2.f)
     , m_timeAccumulator(0.f)
     , m_currentTarget(0)
-    , m_step(0.1f)
+    , m_step(m_mainCharacter ? 0.1f : 0.05f)
     , m_reactorHit(false)
 {
     m_bulletIndicator = new Sprite("resources/sprites/bullet_indicator.png");
