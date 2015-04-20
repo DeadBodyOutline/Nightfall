@@ -20,6 +20,9 @@ public:
     void shoot(int x, int y);
     void setWeaponDecay(float decay); // use only for Sheerin
 
+    std::vector<Bullet *> bullets();
+    void destroyBullet(Bullet *bullet);
+
     sf::FloatRect boundingBox();
     // set if the sprite should collide or not (default = true)
     void setColliding(bool colliding);
@@ -49,7 +52,7 @@ private:
     int m_xDirection;
     int m_yDirection;
 
-     std::vector<Bullet *> m_bullets;
+    std::vector<Bullet *> m_bullets;
 };
 
 #endif // __CHARACTER_H__

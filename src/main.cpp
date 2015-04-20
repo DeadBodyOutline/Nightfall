@@ -9,6 +9,7 @@
 
 #include "character.h"
 #include "reactor.h"
+#include "bullet.h"
 
 #include "stuffmath.h"
 
@@ -36,6 +37,7 @@ int main(int argc, char **argv)
 
     std::vector<Character *> enemies;
     const std::vector<tmx::MapLayer> &layers = ml.GetLayers();
+    auto &objectsLayer = ml.GetLayers()[1].objects;
 
     for (const auto &l : layers) {
         if (l.name == "Characters") {
@@ -98,6 +100,8 @@ int main(int argc, char **argv)
 
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
+                    //sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                    //sheerin->shoot(mousePos.x, mousePos.y);
                     sheerin->shoot(event.mouseButton.x, event.mouseButton.y);
                 }
             }
@@ -144,6 +148,31 @@ int main(int argc, char **argv)
 
         if (!collide) {
             sheerin->move(newPos.x, newPos.y);
+        }
+
+        // bullet collision with blocks
+        // TODO adjust
+        auto &objectsObjects = ml.GetLayers()[3].objects;
+        for (auto &o : objectsObjects) {
+            for (auto &bullet : sheerin->bullets()) {
+                if (o.Contains(bullet->position())) {
+                    sheerin->destroyBullet(bullet);
+                    //std::cout << o.GetName() << std::endl;
+                    break;
+                }
+            }
+        }
+
+        // bullet collision with enemies
+        // TODO adjust
+        auto &enemiesObjects = ml.GetLayers()[4].objects;
+        for (auto &o : enemiesObjects) {
+            for (auto &bullet : sheerin->bullets()) {
+                if (o.GetName() != "Sheerin" && o.Contains(bullet->position())) {
+                    bullet->engage(); // XXX should appear at the center of the enemy
+                    break;
+                }
+            }
         }
 
         // TODO calculate distance to reactor
