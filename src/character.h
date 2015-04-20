@@ -9,6 +9,7 @@
 #include <string>
 
 #include "animatedsprite.h"
+#include "bullet.h"
 
 class Character : public AnimatedSprite
 {
@@ -34,6 +35,7 @@ public:
     bool collideWith(Sprite *sprite);
 
 private:
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void updatePos(sf::Vector2f point);
 
     bool m_collidingEnabled;
@@ -46,6 +48,8 @@ private:
 
     int m_xDirection;
     int m_yDirection;
+
+     std::vector<Bullet *> m_bullets;
 };
 
 #endif // __CHARACTER_H__

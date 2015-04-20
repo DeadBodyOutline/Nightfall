@@ -23,7 +23,17 @@ Character::~Character()
 
 void Character::shoot(int x, int y)
 {
-    std::cout << "I am shooting at (" << x << ", " << y << ")!" << std::endl;
+    sf::Vector2f posCorrection = sf::Vector2f(48, 16); // XXX I don't know why, but will discover someday
+
+    Bullet *weapon = new Bullet("resources/sprites/darkbullet.png");
+
+    sf::Vector2f v = sf::Vector2f(x - 32, y - 32) - (position() - posCorrection);
+    float angle = atan2f(v.y, v.x);
+
+    weapon->run(angle);
+    weapon->setPosition(position() - posCorrection);
+
+    m_bullets.push_back(weapon);
 }
 
 void Character::setWeaponDecay(float decay)
@@ -82,7 +92,28 @@ void Character::setDirection(int x, int y)
 
 void Character::update(sf::Time delta)
 {
+    // XXX use "contains" or something like that
+    for (auto bullet : m_bullets) {
+        if (bullet->position().x + 32 < 0 || bullet->position().y + 32 < 0  ||
+            bullet->position().x > 800 || bullet->position().y > 608) {
+            m_bullets.erase(std::remove(m_bullets.begin(), m_bullets.end(), bullet), m_bullets.end());
+            delete bullet;
+        } else
+            bullet->update(delta);
+    }
+
     AnimatedSprite::update(delta);
+}
+
+void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    if (!m_visible)
+        return;
+
+    for (auto bullet : m_bullets)
+        target.draw(*bullet, states);
+
+    AnimatedSprite::draw(target, states);
 }
 
 bool Character::collideWith(Sprite *sprite)
