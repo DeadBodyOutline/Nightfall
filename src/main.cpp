@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <chrono>
+#include <random>
 
 #include <SFML/Graphics.hpp>
 
@@ -43,6 +45,7 @@ int main(int argc, char **argv)
     const std::vector<tmx::MapLayer> &layers = ml.GetLayers();
     auto &objectsLayer = ml.GetLayers()[1].objects;
 
+    float enemySpawnTimeAcc = 0.f;
     for (const auto &l : layers) {
         if (l.name == "characters") {
             for (const auto& o : l.objects) {
@@ -261,6 +264,27 @@ int main(int argc, char **argv)
 
         while (timeSinceLastUpdate > TimePerFrame) {
             timeSinceLastUpdate -= TimePerFrame;
+        }
+
+        // spawn new enemies each 2 seconds
+        enemySpawnTimeAcc += dt.asSeconds();
+        if (enemySpawnTimeAcc >= 2.f) {
+            unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+            std::default_random_engine gen(seed);
+            std::uniform_int_distribution<int> distr(0, spawnPoints.size() - 1);
+            int p = distr(gen);
+
+            Character *enemy = new Character("resources/sprites/chars.png", 3, 0);
+            sf::Vector2f spawnPoint = spawnPoints[p];
+
+            enemy->setPosition(spawnPoint);
+            if (spawnPoint.x > reactor->position().x)
+                enemy->setDirection(-1, 1);
+
+            enemy->setTarget(wayPoints[p], reactor->position());
+            enemies.push_back(enemy);
+
+            enemySpawnTimeAcc = 0.f;
         }
 
         // TODO should go to an scene or layer
