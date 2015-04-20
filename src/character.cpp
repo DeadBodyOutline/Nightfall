@@ -26,6 +26,11 @@ void Character::shoot(int x, int y)
     std::cout << "I am shooting at (" << x << ", " << y << ")!" << std::endl;
 }
 
+void Character::setWeaponDecay(float decay)
+{
+    // TODO will set the weapong recharge value, near the reactor, recovers fast
+}
+
 sf::FloatRect Character::boundingBox()
 {
     return sf::FloatRect(position().x, position().y, m_tileWidth, m_tileHeight);

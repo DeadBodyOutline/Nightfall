@@ -17,6 +17,7 @@ public:
     ~Character();
 
     void shoot(int x, int y);
+    void setWeaponDecay(float decay); // use only for Sheerin
 
     sf::FloatRect boundingBox();
     // set if the sprite should collide or not (default = true)

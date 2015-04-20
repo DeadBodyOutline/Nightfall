@@ -8,6 +8,9 @@
 #include <tmx/MapObject.h>
 
 #include "character.h"
+#include "reactor.h"
+
+#include "stuffmath.h"
 
 int main(int argc, char **argv)
 {
@@ -29,6 +32,7 @@ int main(int argc, char **argv)
     window.setView(view);
 
     Character *sheerin;
+    Reactor *reactor;
 
     std::vector<Character *> enemies;
     const std::vector<tmx::MapLayer> &layers = ml.GetLayers();
@@ -64,6 +68,15 @@ int main(int argc, char **argv)
                 }
             }
         }
+        if (l.name == "objects") {
+            for (const auto &o : l.objects) {
+                if (o.GetName() == "reactor") {
+                    reactor = new Reactor("resources/sprites/reactor.png");
+                    // offset to properly collide withreacotr
+                    reactor->setPosition(o.GetPosition() - sf::Vector2f(0, 32));
+                }
+            }
+        }
     }
 
     while (window.isOpen()) {
@@ -90,7 +103,7 @@ int main(int argc, char **argv)
             }
         }
 
-        float step = .3f;// TODO
+        float step = .1f;// TODO
 
         sf::Vector2f newPos(0, 0);
         // keyboard input
@@ -133,7 +146,24 @@ int main(int argc, char **argv)
             sheerin->move(newPos.x, newPos.y);
         }
 
+        // TODO calculate distance to reactor
+        sf::Vector2f sPos(sheerin->position().x, sheerin->position().y);
+        sf::Vector2f rPos(reactor->position().x, reactor->position().y);
 
+        // shitty approximation, but it works (:thumbs up:)
+        float d = -1.f;
+        if (sPos.x >= rPos.x)
+            rPos.x += 96;
+        if (sPos.y >= rPos.y)
+            rPos.y += 96;
+
+        d = stuffDistanceF(sPos.x, sPos.y, rPos.x, rPos.y);
+
+        if (d > 135)
+            sheerin->setWeaponDecay(d / 100);
+        else
+            sheerin->setWeaponDecay(1.f);
+        //
 
         // mouse input
         // TODO check difference of doing it or inside event
@@ -160,11 +190,15 @@ int main(int argc, char **argv)
 
         // TODO should go to an scene or layer
         sheerin->update(dt);
+        reactor->update(dt);
+
         for (auto &enemy : enemies)
             enemy->update(dt);
 
         window.draw(ml);
         window.draw(*sheerin);
+        window.draw(*reactor);
+
         for (auto &enemy : enemies)
             window.draw(*enemy);
 

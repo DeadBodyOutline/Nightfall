@@ -90,10 +90,6 @@
   <tile id="82"/>
   <tile id="83"/>
  </tileset>
- <tileset firstgid="85" name="reactor" tilewidth="64" tileheight="96">
-  <image source="../tilesets/reactor.png" trans="ffffff" width="64" height="96"/>
-  <tile id="0"/>
- </tileset>
  <layer name="area" width="25" height="19">
   <data encoding="base64" compression="zlib">
    eJwTYmBgEBoAzAbE7AQwBxF68KmRAGJRAlgMTb8ImWrwYXE0N2NzF7IdbES6nVSMbAepfhi1Y9SOUTtG7RgoO5SAWJkGWAXJDkEaYpD5APmAJcw=
@@ -101,7 +97,7 @@
  </layer>
  <layer name="objects" width="25" height="19">
   <data encoding="base64" compression="zlib">
-   eJxjYCAM5KGYliAEioe6HTo0sANb2GsTUI+MiQGkulkbCROrl5JwGUp2hNLBDmroxaWOmPRDqR2wtKPLAMkztLCDmnopsQOX/2AAFAaw8BgFwxcAACL4Cxk=
+   eJxjYCAM5KGYliAEioe6HTo0sANb2GsTUI+MiQGkulkbCROrl5JwGbWDfnYQk34otQOWdnQZIHmGFnZQUy8lduDyHwyAwgAWHqNg+AIAxuIKxA==
   </data>
  </layer>
  <objectgroup color="#0018a4" name="area">

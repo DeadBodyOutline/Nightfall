@@ -6,6 +6,8 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/animation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/animatedsprite.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/character.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/stuffmath.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/reactor.cpp
 )
 
 set(HEADERS
@@ -13,6 +15,8 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/animation.h
     ${CMAKE_CURRENT_SOURCE_DIR}/animatedsprite.h
     ${CMAKE_CURRENT_SOURCE_DIR}/character.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/stuffmath.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/reactor.h
 )
 
 set(EXECUTABLE_NAME "ld32")
