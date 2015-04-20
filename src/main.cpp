@@ -37,6 +37,8 @@ int main(int argc, char **argv)
 
     std::vector<Character *> enemies;
     std::vector<sf::Vector2f> spawnPoints;
+    std::vector<std::vector<sf::Vector2f> > wayPoints;
+    //wayPoints.reserve(3); // number of waypoints, check TMX file!
 
     const std::vector<tmx::MapLayer> &layers = ml.GetLayers();
     auto &objectsLayer = ml.GetLayers()[1].objects;
@@ -57,6 +59,38 @@ int main(int argc, char **argv)
                     spawnPoints.push_back(o.GetPosition());
             }
         }
+
+        // insert 'shrug' here
+        if (l.name == "waypoints") {
+            for (const auto& o : l.objects) {
+                if (o.GetName() == "waypoint1") {
+                    if (wayPoints.size() == 0) {
+                        std::vector<sf::Vector2f> v;
+                        v.push_back(o.GetPosition());
+
+                        wayPoints.push_back(v);
+                    } else
+                        wayPoints[0].push_back(o.GetPosition());
+                } else if (o.GetName() == "waypoint2") {
+                    if (wayPoints.size() == 1) {
+                        std::vector<sf::Vector2f> v;
+                        v.push_back(o.GetPosition());
+
+                        wayPoints.push_back(v);
+                    } else
+                        wayPoints[1].push_back(o.GetPosition());
+                } else if (o.GetName() == "waypoint3") {
+                    if (wayPoints.size() == 2) {
+                        std::vector<sf::Vector2f> v;
+                        v.push_back(o.GetPosition());
+
+                        wayPoints.push_back(v);
+                    } else
+                        wayPoints[2].push_back(o.GetPosition());
+                }
+            }
+        }
+
         if (l.name == "objects") {
             for (const auto &o : l.objects) {
                 if (o.GetName() == "reactor") {
@@ -68,7 +102,6 @@ int main(int argc, char **argv)
         }
     }
 
-
     for (auto &spawnPoint : spawnPoints) {
         Character *enemy = new Character("resources/sprites/chars.png", 0, 7);
 
@@ -76,12 +109,11 @@ int main(int argc, char **argv)
         if (spawnPoint.x > reactor->position().x)
             enemy->setDirection(-1, 1);
 
+        auto i = &spawnPoint - &spawnPoints[0];
+        enemy->setTarget(wayPoints[i], reactor->position());
+
         enemies.push_back(enemy);
     }
-
-    // set target
-    for (auto &enemy : enemies)
-        enemy->setTarget(reactor->position().x, reactor->position().y);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -177,7 +209,19 @@ int main(int argc, char **argv)
             }
         }
 
-        // TODO calculate distance to reactor
+        for (auto enemy : enemies) {
+            if (enemy->reactorHit()) {
+                reactor->takeDamage(33); // TODO
+
+                enemies.erase(std::remove(enemies.begin(), enemies.end(), enemy), enemies.end());
+                delete enemy;
+            }
+        }
+        if (reactor->energyLevel() <= 0) {
+            // TODO GAME OVER!
+            std::cout << "GAME OVER!" << std::endl;
+        }
+
         sf::Vector2f sPos(sheerin->position().x, sheerin->position().y);
         sf::Vector2f rPos(reactor->position().x, reactor->position().y);
 

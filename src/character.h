@@ -24,7 +24,8 @@ public:
     void destroyBullet(Bullet *bullet);
 
     // enemy only function, track target
-    void setTarget(int x, int y);
+    void setTarget(std::vector<sf::Vector2f> waypoints, sf::Vector2f end);
+    bool reactorHit();
 
     sf::FloatRect boundingBox();
     // set if the sprite should collide or not (default = true)
@@ -64,8 +65,10 @@ private:
     float m_timeToIncBullet;
     float m_timeAccumulator;
 
-    sf::Vector2f m_target;
+    std::vector<sf::Vector2f> m_target;
+    int m_currentTarget;
     float m_step;
+    bool m_reactorHit;
 
     std::vector<Bullet *> m_bullets;
     Sprite *m_bulletIndicator;

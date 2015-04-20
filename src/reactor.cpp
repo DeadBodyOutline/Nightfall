@@ -24,6 +24,11 @@ int Reactor::energyLevel()
     return m_energyLevel;
 }
 
+void Reactor::takeDamage(int damage)
+{
+    m_energyLevel -= damage;
+}
+
 void Reactor::update(sf::Time delta)
 {
     AnimatedSprite::update(delta);
@@ -37,8 +42,19 @@ void Reactor::draw(sf::RenderTarget& target, sf::RenderStates states) const
     int x = position().x - 16;
     int y = position().y + 8;
 
+    bool drawn = false;
+
     int i;
     for (i = 0; i < m_energyLevel / 2; i++) {
+        m_energyIndicator->setPosition(x, y);
+        target.draw(*m_energyIndicator);
+
+        x += m_energyIndicator->width();
+        drawn = true;
+    }
+
+    // draw at least 1 bar if still energy on reactor
+    if (!drawn && m_energyLevel > 0) {
         m_energyIndicator->setPosition(x, y);
         target.draw(*m_energyIndicator);
 

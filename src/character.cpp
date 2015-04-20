@@ -15,7 +15,9 @@ Character::Character(const std::string &fileName, int x, int y, bool mainCharact
     , m_numBullets(m_maxNumBullets)
     , m_timeToIncBullet(2.f)
     , m_timeAccumulator(0.f)
+    , m_currentTarget(0)
     , m_step(0.1f)
+    , m_reactorHit(false)
 {
     m_bulletIndicator = new Sprite("resources/sprites/bullet_indicator.png");
 
@@ -67,9 +69,15 @@ void Character::destroyBullet(Bullet *bullet)
 }
 
 // enemy only function, track target
-void Character::setTarget(int x, int y)
+void Character::setTarget(std::vector<sf::Vector2f> waypoints, sf::Vector2f end)
 {
-    m_target = sf::Vector2f(x, y);
+    m_target = waypoints;
+    m_target.push_back(end);
+}
+
+bool Character::reactorHit()
+{
+    return m_reactorHit;
 }
 
 sf::FloatRect Character::boundingBox()
@@ -147,15 +155,45 @@ void Character::update(sf::Time delta)
         //std::cout << "time: " << m_timeAccumulator << std::endl;
         //std::cout << "--" << std::endl;
     } else {
-        sf::Vector2f posCorrection = sf::Vector2f(32, 48); // damn
-        sf::Vector2f v = sf::Vector2f(m_target.x, m_target.y) + posCorrection - position();
+        float x = (m_xDirection == 1 ? 0 : 32);
+        int diff = 2;
 
-        float angle = atan2f(v.y, v.x);
+        if (m_currentTarget == m_target.size() -1) {
+            if (m_xDirection == -1)
+                diff = 96;
+            else
+                diff = 32;
+        }
 
-        float newX = cos(angle) * m_step;
-        float newY = sin(angle) * m_step;
+        //std::cout << "Pos: " << position().x << ", " << position().y << std::endl;
+        //std::cout << "Tar: " << m_target[m_currentTarget].x << ", " << m_target[m_currentTarget].y << std::endl;
+        //std::cout << "Cur: " << m_currentTarget << std::endl;
+        //std::cout << "Dif: " << fabs(x + position().x - m_target[m_currentTarget].x) << std::endl;
+        //std::cout << "Siz: " << m_target.size() << std::endl;
 
-        move(newX, newY);
+        if (fabs(x + position().x - m_target[m_currentTarget].x) <= 2 + x + diff) {
+            m_currentTarget++;
+
+            if (m_currentTarget >= m_target.size())
+                m_reactorHit = true;
+        }
+
+        if (!m_reactorHit) {
+            sf::Vector2f posCorrection = sf::Vector2f(0, 0); // damn
+            if (m_currentTarget == m_target.size() -1)
+                posCorrection = sf::Vector2f(m_xDirection == 1 ? 32 : 96, 48);
+
+            sf::Vector2f v = sf::Vector2f(
+                    m_target[m_currentTarget].x, m_target[m_currentTarget].y)
+                    + posCorrection - position();
+
+            float angle = atan2f(v.y, v.x);
+
+            float newX = cos(angle) * m_step;
+            float newY = sin(angle) * m_step;
+
+            move(newX, newY);
+        }
     }
 
     AnimatedSprite::update(delta);

@@ -15,6 +15,7 @@ public:
     ~Reactor();
 
     int energyLevel();
+    void takeDamage(int damage = 6);
 
     void update(sf::Time delta = sf::Time::Zero);
 
