@@ -18,6 +18,7 @@ public:
 
     void shoot(int x, int y);
 
+    sf::FloatRect boundingBox();
     // set if the sprite should collide or not (default = true)
     void setColliding(bool colliding);
     bool colliding();

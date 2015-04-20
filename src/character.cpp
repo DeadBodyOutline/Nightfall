@@ -26,6 +26,16 @@ void Character::shoot(int x, int y)
     std::cout << "I am shooting at (" << x << ", " << y << ")!" << std::endl;
 }
 
+sf::FloatRect Character::boundingBox()
+{
+    return sf::FloatRect(position().x, position().y, m_tileWidth, m_tileHeight);
+    //return sf::FloatRect(position().x - m_tileWidth, position().y, m_tileWidth, m_tileHeight);
+    //return sf::FloatRect(position().x, position().y, m_tileWidth, m_tileHeight);
+    //return m_sprite.getGlobalBounds();
+
+    //return m_sprite.getLocalBounds();
+}
+
 void Character::setColliding(bool colliding)
 {
     m_collidingEnabled = colliding;

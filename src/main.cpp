@@ -29,9 +29,10 @@ int main(int argc, char **argv)
     window.setView(view);
 
     Character *sheerin;
-    std::vector<Character *> enemies;
 
-    const std::vector<tmx::MapLayer>& layers = ml.GetLayers();
+    std::vector<Character *> enemies;
+    const std::vector<tmx::MapLayer> &layers = ml.GetLayers();
+
     for (const auto &l : layers) {
         if (l.name == "Characters") {
             for (const auto& o : l.objects) {
@@ -91,22 +92,48 @@ int main(int argc, char **argv)
 
         float step = .3f;// TODO
 
+        sf::Vector2f newPos(0, 0);
         // keyboard input
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            sheerin->move(step, 0);
+            newPos.x += step;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            sheerin->move(-step, 0);
+            newPos.x += -step;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            sheerin->move(0, -step);
+            newPos.y += -step;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            sheerin->move(0, step);
+            newPos.y += step;
         }
+
+        // TODO hum
+        ml.UpdateQuadTree(sf::FloatRect(sheerin->position().x + newPos.x - 32, sheerin->position().y + newPos.y, 32, 32));
+        //ml.UpdateQuadTree(sf::FloatRect(sheerin->position().x - 32, sheerin->position().y, 32, 32));
+        //ml.UpdateQuadTree(sf::FloatRect(0.0f, 0.0f, windowSize.x, windowSize.y));
+        sf::FloatRect tR = sheerin->boundingBox();
+        std::vector<tmx::MapObject*> objects = ml.QueryQuadTree(tR);
+
+        bool collide = false;
+        for (auto &o : objects) {
+                if (o->GetName() == "reactor")
+                    collide = true;
+
+                if (o->GetName() == "block")
+                    collide = true;
+
+                if (o->GetName() == "wall")
+                    collide = true;
+        }
+
+        if (!collide) {
+            sheerin->move(newPos.x, newPos.y);
+        }
+
+
 
         // mouse input
         // TODO check difference of doing it or inside event

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="19" tilewidth="32" tileheight="32" nextobjectid="42">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="19" tilewidth="32" tileheight="32" nextobjectid="108">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
   <image source="../tilesets/tileset.png" width="448" height="192"/>
   <terraintypes>
@@ -104,37 +104,30 @@
    eJxjYCAM5KGYliAEioe6HTo0sANb2GsTUI+MiQGkulkbCROrl5JwGUp2hNLBDmroxaWOmPRDqR2wtKPLAMkztLCDmnopsQOX/2AAFAaw8BgFwxcAACL4Cxk=
   </data>
  </layer>
- <objectgroup name="area">
-  <object id="5" x="32" y="128" height="448"/>
-  <object id="6" x="32" y="128" width="32"/>
-  <object id="9" x="64" y="64" height="64"/>
-  <object id="10" x="160" y="32" height="32"/>
-  <object id="11" x="64" y="64" width="96"/>
-  <object id="12" x="160" y="32" width="128"/>
-  <object id="13" x="352" y="32" width="128"/>
-  <object id="14" x="480" y="32" height="64"/>
-  <object id="15" x="480" y="96" width="96"/>
-  <object id="17" x="576" y="32" height="64"/>
-  <object id="18" x="576" y="32" width="192"/>
-  <object id="19" x="768" y="32" height="544"/>
-  <object id="21" x="32" y="576" width="736"/>
+ <objectgroup color="#0018a4" name="area">
+  <object id="89" name="wall" x="64" y="32" width="96" height="32"/>
+  <object id="90" name="wall" x="32" y="32" width="32" height="96"/>
+  <object id="91" name="wall" x="0" y="96" width="32" height="512"/>
+  <object id="92" name="wall" x="32" y="576" width="768" height="32"/>
+  <object id="94" name="wall" x="768" y="0" width="32" height="576"/>
+  <object id="95" name="wall" x="352" y="0" width="160" height="32"/>
+  <object id="96" name="wall" x="544" y="0" width="224" height="32"/>
+  <object id="97" name="wall" x="128" y="0" width="160" height="32"/>
+  <object id="103" name="wall" x="480" y="32" width="32" height="64"/>
+  <object id="104" name="wall" x="544" y="32" width="32" height="64"/>
+  <object id="105" name="wall" x="512" y="64" width="32" height="32"/>
  </objectgroup>
- <objectgroup name="objects">
-  <object id="31" x="160" y="160">
-   <polyline points="0,0 32,0 32,320 -64,320 -64,288 0,288 0,0"/>
-  </object>
-  <object id="32" x="544" y="160">
-   <polyline points="0,0 128,0 128,288 96,288 96,32 0,32 0,0"/>
-  </object>
-  <object id="33" x="352" y="352">
-   <polyline points="0,0 128,0 128,32 0,32 0,0"/>
-  </object>
-  <object id="34" x="288" y="32">
-   <polyline points="0,0 64,0 64,128 32,128 32,96 0,96 0,0"/>
-  </object>
+ <objectgroup color="#ff0000" name="objects">
   <object id="41" name="reactor" x="416" y="224" width="64" height="64"/>
+  <object id="59" name="block" x="544" y="160" width="128" height="32"/>
+  <object id="60" name="block" x="640" y="192" width="32" height="256"/>
+  <object id="63" name="block" x="288" y="32" width="64" height="96"/>
+  <object id="64" name="block" x="320" y="128" width="32" height="32"/>
+  <object id="65" name="block" x="160" y="160" width="32" height="320"/>
+  <object id="66" name="block" x="96" y="448" width="64" height="32"/>
+  <object id="67" name="block" x="352" y="352" width="128" height="32"/>
  </objectgroup>
- <objectgroup name="Characters">
+ <objectgroup color="#55ff7f" name="Characters">
   <object id="35" name="Sheerin" x="320" y="224" width="32" height="32"/>
   <object id="36" name="enemy1" x="64" y="512" width="32" height="32"/>
   <object id="37" name="enemy2" x="416" y="480" width="32" height="32"/>
