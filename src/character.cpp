@@ -1,7 +1,7 @@
 #include "character.h"
 
 Character::Character(const std::string &fileName, int x, int y, bool mainCharacter)
-    : AnimatedSprite(fileName, 288, 256)
+    : AnimatedSprite(fileName, 32, 2304)
     , m_collidingEnabled(true)
     , m_tileWidth(32)
     , m_tileHeight(32)

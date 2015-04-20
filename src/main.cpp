@@ -50,7 +50,7 @@ int main(int argc, char **argv)
         if (l.name == "characters") {
             for (const auto& o : l.objects) {
                 if (o.GetName() == "Sheerin") {
-                    sheerin = new Character("resources/sprites/chars.png", 0, 4, true);
+                    sheerin = new Character("resources/sprites/chars.png", 0, 36, true);
 
                     sheerin->setPosition(o.GetPosition());
                     sheerin->setDirection(-1, 1);
@@ -103,19 +103,6 @@ int main(int argc, char **argv)
                 }
             }
         }
-    }
-
-    for (auto &spawnPoint : spawnPoints) {
-        Character *enemy = new Character("resources/sprites/chars.png", 0, 7);
-
-        enemy->setPosition(spawnPoint);
-        if (spawnPoint.x > reactor->position().x)
-            enemy->setDirection(-1, 1);
-
-        auto i = &spawnPoint - &spawnPoints[0];
-        enemy->setTarget(wayPoints[i], reactor->position());
-
-        enemies.push_back(enemy);
     }
 
     while (window.isOpen()) {
@@ -222,7 +209,7 @@ int main(int argc, char **argv)
         }
         if (reactor->energyLevel() <= 0) {
             // TODO GAME OVER!
-            std::cout << "GAME OVER!" << std::endl;
+            //std::cout << "GAME OVER!" << std::endl;
         }
 
         sf::Vector2f sPos(sheerin->position().x, sheerin->position().y);
@@ -274,7 +261,17 @@ int main(int argc, char **argv)
             std::uniform_int_distribution<int> distr(0, spawnPoints.size() - 1);
             int p = distr(gen);
 
-            Character *enemy = new Character("resources/sprites/chars.png", 3, 0);
+            distr = std::uniform_int_distribution<int>(0, 69); // 70 different characters
+            int character;
+
+            // avoid spawning Sheerin (char #36)
+            do {
+                character = distr(gen);
+            } while (character == 36);
+
+            std::cout << character << std::endl;
+
+            Character *enemy = new Character("resources/sprites/chars.png", 0, character);
             sf::Vector2f spawnPoint = spawnPoints[p];
 
             enemy->setPosition(spawnPoint);
