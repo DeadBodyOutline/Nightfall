@@ -36,38 +36,25 @@ int main(int argc, char **argv)
     Reactor *reactor;
 
     std::vector<Character *> enemies;
+    std::vector<sf::Vector2f> spawnPoints;
+
     const std::vector<tmx::MapLayer> &layers = ml.GetLayers();
     auto &objectsLayer = ml.GetLayers()[1].objects;
 
     for (const auto &l : layers) {
-        if (l.name == "Characters") {
+        if (l.name == "characters") {
             for (const auto& o : l.objects) {
                 if (o.GetName() == "Sheerin") {
                     sheerin = new Character("resources/sprites/chars.png", 0, 4, true);
 
                     sheerin->setPosition(o.GetPosition());
                     sheerin->setDirection(-1, 1);
-                } else if (o.GetName() == "enemy1") {
-                    Character *enemy = new Character("resources/sprites/chars.png", 0, 7);
-
-                    enemy->setPosition(o.GetPosition());
-
-                    enemies.push_back(enemy);
-                } else if (o.GetName() == "enemy2") {
-                    Character *enemy = new Character("resources/sprites/chars.png", 5, 1);
-
-                    enemy->setPosition(o.GetPosition());
-                    enemy->setDirection(-1, 1);
-
-                    enemies.push_back(enemy);
-                } else if (o.GetName() == "enemy3") {
-                    Character *enemy = new Character("resources/sprites/chars.png", 1, 6);
-
-                    enemy->setPosition(o.GetPosition());
-                    enemy->setDirection(-1, 1);
-
-                    enemies.push_back(enemy);
-                }
+                } else if (o.GetName() == "enemy1")
+                    spawnPoints.push_back(o.GetPosition());
+                else if (o.GetName() == "enemy2")
+                    spawnPoints.push_back(o.GetPosition());
+                else if (o.GetName() == "enemy3")
+                    spawnPoints.push_back(o.GetPosition());
             }
         }
         if (l.name == "objects") {
@@ -79,6 +66,17 @@ int main(int argc, char **argv)
                 }
             }
         }
+    }
+
+
+    for (auto &spawnPoint : spawnPoints) {
+        Character *enemy = new Character("resources/sprites/chars.png", 0, 7);
+
+        enemy->setPosition(spawnPoint);
+        if (spawnPoint.x > reactor->position().x)
+            enemy->setDirection(-1, 1);
+
+        enemies.push_back(enemy);
     }
 
     // set target
