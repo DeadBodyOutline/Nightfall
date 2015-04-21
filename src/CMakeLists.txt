@@ -9,6 +9,7 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/stuffmath.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/reactor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/bullet.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/eyes.cpp
 )
 
 set(HEADERS
@@ -19,6 +20,7 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/stuffmath.h
     ${CMAKE_CURRENT_SOURCE_DIR}/reactor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/bullet.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/eyes.h
 )
 
 set(EXECUTABLE_NAME "ld32")

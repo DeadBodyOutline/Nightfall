@@ -45,6 +45,7 @@ int main(int argc, char **argv)
     auto &objectsLayer = ml.GetLayers()[1].objects;
 
     int enemiesIntoDarkness = 0;
+    bool gameOver = true;
 
     float enemySpawnTimeAcc = 0.f;
     for (const auto &l : layers) {
@@ -210,7 +211,7 @@ int main(int argc, char **argv)
 
         for (auto enemy : enemies) {
             if (enemy->reactorHit()) {
-                reactor->takeDamage(33); // TODO
+                reactor->takeDamage(6); // TODO
 
                 enemies.erase(std::remove(enemies.begin(), enemies.end(), enemy), enemies.end());
                 delete enemy;
@@ -220,8 +221,7 @@ int main(int argc, char **argv)
             }
         }
         if (reactor->energyLevel() <= 0) {
-            // TODO GAME OVER!
-            //std::cout << "GAME OVER!" << std::endl;
+            gameOver = true;
         }
 
         sf::Vector2f sPos(sheerin->position().x, sheerin->position().y);

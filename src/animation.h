@@ -13,6 +13,7 @@ public:
     virtual ~Animation();
 
     void addFrames(int x1, int x2, int y, float duration);
+    void addFramesY(int x, int y1, int y2, float duration);
     void addWholeFile(int numColumns, int numFrames, float duration);
 
     virtual std::string name() const;

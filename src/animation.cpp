@@ -26,6 +26,17 @@ void Animation::addFrames(int x1, int x2, int y, float duration)
                     m_frameHeight * y, m_frameWidth, m_frameHeight));
 }
 
+void Animation::addFramesY(int x, int y1, int y2, float duration)
+{
+    const int step = (y1 < y2) ? +1 : -1;
+    y2 += step;
+
+    int y;
+    for (y = y1; y != y2; y += step)
+        thor::FrameAnimation::addFrame(duration, sf::IntRect(m_frameWidth * x,
+                    m_frameHeight * y, m_frameWidth, m_frameHeight));
+}
+
 void Animation::addWholeFile(int numColumns, int numFrames, float duration)
 {
     int x, y, i;

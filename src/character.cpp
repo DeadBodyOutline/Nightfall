@@ -9,7 +9,7 @@ Character::Character(const std::string &fileName, int x, int y, bool mainCharact
     , m_yDirection(1)
     , m_weaponDecay(1.f)
     , m_mainCharacter(mainCharacter)
-    , m_maxNumBullets(1000) // TODO 10
+    , m_maxNumBullets(10) // TODO 10
     , m_numBullets(m_maxNumBullets)
     , m_timeToIncBullet(2.f)
     , m_timeAccumulator(0.f)
@@ -158,6 +158,9 @@ void Character::update(sf::Time delta)
             m_deleteTimeAccumulator = 0.f;
         }
 
+        for (auto bullet : m_bullets)
+            bullet->update(delta);
+
         AnimatedSprite::update(delta);
         return;
     }
@@ -232,6 +235,13 @@ void Character::update(sf::Time delta)
 
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+    if (m_freeze) {
+        for (auto bullet : m_bullets)
+            target.draw(*bullet, states);
+
+        return;
+    }
+
     if (!m_visible)
         return;
 

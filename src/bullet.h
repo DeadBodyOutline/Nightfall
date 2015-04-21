@@ -7,6 +7,7 @@
 #include <string>
 
 #include "animatedsprite.h"
+#include "eyes.h"
 
 class Bullet : public AnimatedSprite
 {
@@ -23,6 +24,8 @@ public:
     void update(sf::Time delta = sf::Time::Zero);
 
 private:
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
     float m_step;
     float m_angle;
 
@@ -33,6 +36,8 @@ private:
     bool m_deleteMe;
 
     float m_deleteTimeAccumulator;
+
+    Eyes *m_eyes;
 };
 
 #endif // __BULLET_H__

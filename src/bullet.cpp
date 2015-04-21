@@ -10,6 +10,8 @@ Bullet::Bullet(const std::string &fileName, int x, int y)
     , m_deleteMe(false)
     , m_deleteTimeAccumulator(0.f)
 {
+    m_eyes = new Eyes("resources/sprites/darkness_eyes.png");
+
     Animation animation("bullet", m_tileWidth, m_tileHeight);
     animation.addFrames(x, x, y, 1.f);
     addAnimation(animation, sf::seconds(1.f));
@@ -36,6 +38,7 @@ void Bullet::engage(sf::Vector2f pos)
     play("engaged");
 
     setPosition(pos);
+    m_eyes->setPosition(pos + sf::Vector2f(14, 16));
 }
 
 bool Bullet::engaged()
@@ -56,7 +59,13 @@ void Bullet::update(sf::Time delta)
 
         move(newX, newY);
     } else {
+        m_eyes->update(delta);
+
         m_deleteTimeAccumulator += delta.asSeconds();
+
+        if (m_deleteTimeAccumulator >= 6) {
+            m_eyes->die();
+        }
 
         if (m_deleteTimeAccumulator >= 8) {
             m_deleteMe = true;
@@ -66,4 +75,13 @@ void Bullet::update(sf::Time delta)
     }
 
     AnimatedSprite::update(delta);
+
+}
+
+void Bullet::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    AnimatedSprite::draw(target, states);
+
+    if (m_engaged)
+        target.draw(*m_eyes);
 }
