@@ -32,7 +32,7 @@ include_directories(${PROJECT_SOURCE_DIR}/3rdparty/dependencies/sfml-tmxloader/i
 
 
 find_library(SFMLTMXLOADER_LIBRARY tmx-loader PATHS ${PROJECT_SOURCE_DIR}/3rdparty/dependencies/sfml-tmxloader DOC "tmx-loader library")
-#windows
+#windows/mac
 #find_library(SFMLTMXLOADER_LIBRARY tmx-loader PATHS ${PROJECT_SOURCE_DIR}/DEPS/sfml-tmxloader-master/ DOC "tmx-loader library")
 if(NOT SFMLTMXLOADER_LIBRARY)
     message(FATAL_ERROR "Library tmx-loader required, but not found!")
@@ -40,7 +40,7 @@ endif(NOT SFMLTMXLOADER_LIBRARY)
 target_link_libraries(${EXECUTABLE_NAME} ${SFMLTMXLOADER_LIBRARY})
 
 
-# windows
+# windows/mac
 #find_package(ZLIB REQUIRED)
 #if(ZLIB_FOUND)
     #include_directories(${ZLIB_INCLUDE_DIRS})
@@ -53,9 +53,6 @@ target_link_libraries(${EXECUTABLE_NAME} ${SFMLTMXLOADER_LIBRARY})
 #find_library(PUGI_LIBRARY pugi PATHS ${PROJECT_SOURCE_DIR}/DEPS/sfml-tmxloader-master/ DOC "pugi library")
 
 find_library(PUGI_LIBRARY pugi PATHS ${PROJECT_SOURCE_DIR}/3rdparty/dependencies/sfml-tmxloader DOC "pugi library")
-
-
-find_library(PUGI_LIBRARY pugi PATHS ${PROJECT_SOURCE_DIR}/DEPS/sfml-tmxloader-master/ DOC "pugi library")
 if(NOT PUGI_LIBRARY)
     message(FATAL_ERROR "Library pugi required, but not found!")
 endif(NOT PUGI_LIBRARY)
@@ -76,7 +73,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules" ${CMAKE_MODULE_PATH})
 #set(SFML_STATIC_LIBRARIES TRUE)
 
 find_package(SFML 2 REQUIRED graphics window system)
-#find_package(SFML 2 REQUIRED system window graphics)
 if(SFML_FOUND)
   include_directories(${SFML_INCLUDE_DIR})
   target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
@@ -108,3 +104,11 @@ file(COPY ${PROJECT_SOURCE_DIR}/resources DESTINATION ${PROJECT_SOURCE_DIR}/buil
 install(TARGETS ${EXECUTABLE_NAME} DESTINATION .)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/resources DESTINATION .)
 install(FILES ${PROJECT_SOURCE_DIR}/README.md DESTINATION .)
+
+# XXX mac version notes:
+#on macos used it to fix freetype path:
+#- copied freetype.framework from SFML install into Frameworks; run:
+#- install_name_tool -change "@rpath/../Frameworks/freetype.framework/Versions/A/freetype" "@loader_path/./Frameworks/freetype.framework/Versions/A/freetype" ld32
+#
+#alternatives using cmake:
+#http://www.cmake.org/Wiki/BundleUtilitiesExample
