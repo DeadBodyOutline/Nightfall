@@ -6,6 +6,8 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/animation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/animatedsprite.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/character.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/player.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/enemy.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/stuffmath.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/reactor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/bullet.cpp
@@ -17,6 +19,8 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/animation.h
     ${CMAKE_CURRENT_SOURCE_DIR}/animatedsprite.h
     ${CMAKE_CURRENT_SOURCE_DIR}/character.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/player.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/enemy.h
     ${CMAKE_CURRENT_SOURCE_DIR}/stuffmath.h
     ${CMAKE_CURRENT_SOURCE_DIR}/reactor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/bullet.h

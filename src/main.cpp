@@ -9,7 +9,8 @@
 #include <tmx/MapLoader.h>
 #include <tmx/MapObject.h>
 
-#include "character.h"
+#include "player.h"
+#include "enemy.h"
 #include "reactor.h"
 #include "bullet.h"
 
@@ -34,10 +35,10 @@ int main(int argc, char **argv)
     sf::View view(sf::FloatRect(0, mapSize.y - windowSize.y, windowSize.x, windowSize.y));
     window.setView(view);
 
-    Character *sheerin;
+    Player *sheerin;
     Reactor *reactor;
 
-    std::vector<Character *> enemies;
+    std::vector<Enemy *> enemies;
     std::vector<sf::Vector2f> spawnPoints;
     std::vector<std::vector<sf::Vector2f> > wayPoints;
 
@@ -52,7 +53,7 @@ int main(int argc, char **argv)
         if (l.name == "characters") {
             for (const auto& o : l.objects) {
                 if (o.GetName() == "Sheerin") {
-                    sheerin = new Character("resources/sprites/chars.png", 0, 36, true);
+                    sheerin = new Player("resources/sprites/chars.png", 0, 36);
 
                     sheerin->setPosition(o.GetPosition());
                     sheerin->setDirection(-1, 1);
@@ -281,7 +282,7 @@ int main(int argc, char **argv)
                 character = distr(gen);
             } while (character == 36);
 
-            Character *enemy = new Character("resources/sprites/chars.png", 0, character);
+            Enemy *enemy = new Enemy("resources/sprites/chars.png", 0, character);
             sf::Vector2f spawnPoint = spawnPoints[p];
 
             enemy->setPosition(spawnPoint);
