@@ -9,8 +9,11 @@
 #include <tmx/MapLoader.h>
 #include <tmx/MapObject.h>
 
+#include "layer.h"
+
 #include "player.h"
 #include "enemy.h"
+
 #include "reactor.h"
 #include "bullet.h"
 
@@ -38,15 +41,16 @@ int main(int argc, char **argv)
     Player *sheerin;
     Reactor *reactor;
 
-    std::vector<Enemy *> enemies;
     std::vector<sf::Vector2f> spawnPoints;
     std::vector<std::vector<sf::Vector2f> > wayPoints;
 
     const std::vector<tmx::MapLayer> &layers = ml.GetLayers();
-    auto &objectsLayer = ml.GetLayers()[1].objects;
 
     int enemiesIntoDarkness = 0;
     bool gameOver = true;
+
+    // Layers
+    Layer enemiesLayer;
 
     float enemySpawnTimeAcc = 0.f;
     for (const auto &l : layers) {
@@ -190,10 +194,11 @@ int main(int argc, char **argv)
 
         // bullet collision with enemies
         // TODO adjust
-        for (auto &enemy : enemies) {
+        for (auto &sprite : enemiesLayer.sprites()) {
             for (auto &bullet : sheerin->bullets()) {
                 if (!bullet->engaged()) {
                     sf::Vector2f bPos = bullet->position() + sf::Vector2f(32, 32);
+                    Enemy *enemy = dynamic_cast<Enemy *>(sprite);
 
                     if (enemy->colliding() && bullet->collideWith(enemy)) {
                         enemy->setColliding(false);
@@ -210,17 +215,17 @@ int main(int argc, char **argv)
             }
         }
 
-        for (auto enemy : enemies) {
+        for (auto &sprite : enemiesLayer.sprites()) {
+            Enemy *enemy = dynamic_cast<Enemy *>(sprite);
+
             if (enemy->reactorHit()) {
                 reactor->takeDamage(6); // TODO
 
-                enemies.erase(std::remove(enemies.begin(), enemies.end(), enemy), enemies.end());
-                delete enemy;
-            } else if (enemy->deleteMe()) {
-                enemies.erase(std::remove(enemies.begin(), enemies.end(), enemy), enemies.end());
-                delete enemy;
-            }
+                enemiesLayer.remove(sprite);
+            } else if (enemy->deleteMe())
+                enemiesLayer.remove(sprite);
         }
+
         if (reactor->energyLevel() <= 0) {
             gameOver = true;
         }
@@ -290,7 +295,7 @@ int main(int argc, char **argv)
                 enemy->setDirection(-1, 1);
 
             enemy->setTarget(wayPoints[p], reactor->position());
-            enemies.push_back(enemy);
+            enemiesLayer.addSprite(enemy);
 
             enemySpawnTimeAcc = 0.f;
         }
@@ -299,15 +304,13 @@ int main(int argc, char **argv)
         sheerin->update(dt);
         reactor->update(dt);
 
-        for (auto &enemy : enemies)
-            enemy->update(dt);
+        enemiesLayer.update(dt);
 
         window.draw(ml);
         window.draw(*sheerin);
         window.draw(*reactor);
 
-        for (auto &enemy : enemies)
-            window.draw(*enemy);
+        window.draw(enemiesLayer);
 
         window.display();
     }
