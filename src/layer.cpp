@@ -34,7 +34,7 @@ SpriteContainer &Layer::sprites()
 void Layer::update(sf::Time delta)
 {
     for (auto sprite : m_sprites)
-        sprite->update();
+        sprite->update(delta);
 }
 
 void Layer::draw(sf::RenderTarget& target, sf::RenderStates states) const

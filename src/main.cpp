@@ -51,6 +51,7 @@ int main(int argc, char **argv)
 
     // Layers
     Layer enemiesLayer;
+    Layer mainLayer; // layer to hold Player and Reactor;
 
     float enemySpawnTimeAcc = 0.f;
     for (const auto &l : layers) {
@@ -61,6 +62,8 @@ int main(int argc, char **argv)
 
                     sheerin->setPosition(o.GetPosition());
                     sheerin->setDirection(-1, 1);
+
+                    mainLayer.addSprite(sheerin);
                 } else if (o.GetName() == "enemy1")
                     spawnPoints.push_back(o.GetPosition());
                 else if (o.GetName() == "enemy2")
@@ -107,6 +110,8 @@ int main(int argc, char **argv)
                     reactor = new Reactor("resources/sprites/reactor.png");
                     // offset to properly collide withreacotr
                     reactor->setPosition(o.GetPosition() - sf::Vector2f(0, 32));
+
+                    mainLayer.addSprite(reactor);
                 }
             }
         }
@@ -300,17 +305,12 @@ int main(int argc, char **argv)
             enemySpawnTimeAcc = 0.f;
         }
 
-        // TODO should go to an scene or layer
-        sheerin->update(dt);
-        reactor->update(dt);
-
         enemiesLayer.update(dt);
+        mainLayer.update(dt);
 
         window.draw(ml);
-        window.draw(*sheerin);
-        window.draw(*reactor);
-
         window.draw(enemiesLayer);
+        window.draw(mainLayer);
 
         window.display();
     }
