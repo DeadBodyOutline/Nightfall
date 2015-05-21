@@ -63,7 +63,7 @@ int main(int argc, char **argv)
                     sheerin->setPosition(o.GetPosition());
                     sheerin->setDirection(-1, 1);
 
-                    mainLayer.addSprite(sheerin);
+                    mainLayer.addSprite(*sheerin);
                 } else if (o.GetName() == "enemy1")
                     spawnPoints.push_back(o.GetPosition());
                 else if (o.GetName() == "enemy2")
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
                     // offset to properly collide withreacotr
                     reactor->setPosition(o.GetPosition() - sf::Vector2f(0, 32));
 
-                    mainLayer.addSprite(reactor);
+                    mainLayer.addSprite(*reactor);
                 }
             }
         }
@@ -218,17 +218,15 @@ int main(int argc, char **argv)
                     sheerin->destroyBullet(bullet);
                 }
             }
-        }
 
-        for (auto &sprite : enemiesLayer.sprites()) {
             Enemy *enemy = dynamic_cast<Enemy *>(sprite);
 
             if (enemy->reactorHit()) {
                 reactor->takeDamage(6); // TODO
 
-                enemiesLayer.remove(sprite);
+                enemiesLayer.remove(*sprite);
             } else if (enemy->deleteMe())
-                enemiesLayer.remove(sprite);
+                enemiesLayer.remove(*sprite);
         }
 
         if (reactor->energyLevel() <= 0) {
@@ -300,7 +298,7 @@ int main(int argc, char **argv)
                 enemy->setDirection(-1, 1);
 
             enemy->setTarget(wayPoints[p], reactor->position());
-            enemiesLayer.addSprite(enemy);
+            enemiesLayer.addSprite(*enemy);
 
             enemySpawnTimeAcc = 0.f;
         }

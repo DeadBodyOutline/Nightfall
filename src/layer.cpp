@@ -1,5 +1,6 @@
 #include "layer.h"
 
+// XXX move to an utils file
 #define UNUSED(x) (void)x;
 
 Layer::Layer()
@@ -12,20 +13,21 @@ Layer::~Layer()
     m_sprites.clear();
 }
 
-void Layer::addSprite(Sprite *sprite, int zOrder)
+void Layer::addSprite(Sprite &sprite, int zOrder)
 {
     UNUSED(zOrder); // one day it will be used, one day...
-    m_sprites.push_back(sprite);
+    m_sprites.push_back(&sprite);
 }
 
-void Layer::remove(Sprite *sprite)
+void Layer::remove(Sprite &sprite)
 {
     m_sprites.erase(
-            std::remove(m_sprites.begin(), m_sprites.end(), sprite),
+            std::remove(m_sprites.begin(), m_sprites.end(), &sprite),
             m_sprites.end());
 
-    delete sprite;
+    delete &sprite;
 }
+
 SpriteContainer &Layer::sprites()
 {
     return m_sprites;

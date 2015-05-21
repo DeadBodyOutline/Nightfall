@@ -13,10 +13,10 @@ class Layer : public sf::Drawable
 {
 public:
     Layer();
-    virtual ~Layer();
+    ~Layer();
 
-    void addSprite(Sprite *sprite, int zOrder = 0);
-    void remove(Sprite *sprite);
+    void addSprite(Sprite &sprite, int zOrder = 0);
+    void remove(Sprite &sprite);
 
     // for manipulation
     SpriteContainer &sprites();
