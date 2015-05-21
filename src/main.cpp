@@ -9,6 +9,7 @@
 #include <tmx/MapLoader.h>
 #include <tmx/MapObject.h>
 
+#include "scene.h"
 #include "layer.h"
 
 #include "player.h"
@@ -49,9 +50,15 @@ int main(int argc, char **argv)
     int enemiesIntoDarkness = 0;
     bool gameOver = true;
 
+    // Game scene
+    Scene scene;
+
     // Layers
     Layer enemiesLayer;
     Layer mainLayer; // layer to hold Player and Reactor;
+
+    scene.addLayer(enemiesLayer);
+    scene.addLayer(mainLayer);
 
     float enemySpawnTimeAcc = 0.f;
     for (const auto &l : layers) {
@@ -303,12 +310,10 @@ int main(int argc, char **argv)
             enemySpawnTimeAcc = 0.f;
         }
 
-        enemiesLayer.update(dt);
-        mainLayer.update(dt);
+        scene.update(dt);
 
         window.draw(ml);
-        window.draw(enemiesLayer);
-        window.draw(mainLayer);
+        window.draw(scene);
 
         window.display();
     }
