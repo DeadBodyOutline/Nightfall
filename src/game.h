@@ -2,28 +2,28 @@
 #define __GAME_H__
 
 #include <SFML/Graphics.hpp>
-#include <stack>
+
+#include <memory>
 
 #include "scene.h"
+#include "stuffmath.h"
 
 typedef std::vector<Scene *> SceneContainer;
 //typedef std::stack<Scene *> SceneContainer;
 
-// XXX will contain game loop, render and control (what layers to show on screen)
 class Game
-//class Game : public sf::Drawable
 {
 public:
-    Game(int width, int height);
+    Game(int width, int height, const std::string &title = "");
     ~Game();
 
-    void excelsior(); // because reasons
+    int excelsior(); // because reasons
 
 private:
-    //void addLayer(Layer &layer);
+    void draw();
 
-    //void update(sf::Time delta = sf::Time::Zero);
-    //void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    std::shared_ptr<sf::RenderWindow> m_window;
+    sf::Vector2u m_windowSize;
 
     SceneContainer m_scenes;
 };
