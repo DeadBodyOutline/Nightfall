@@ -2,6 +2,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scene.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sprite.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/animation.cpp
@@ -17,6 +18,7 @@ set(SOURCES
 )
 
 set(HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/game.h
     ${CMAKE_CURRENT_SOURCE_DIR}/sprite.h
     ${CMAKE_CURRENT_SOURCE_DIR}/scene.h
     ${CMAKE_CURRENT_SOURCE_DIR}/animation.h
