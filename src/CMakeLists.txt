@@ -4,6 +4,7 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scene.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/world.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sprite.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/animation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/animatedsprite.cpp
@@ -21,6 +22,7 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/game.h
     ${CMAKE_CURRENT_SOURCE_DIR}/sprite.h
     ${CMAKE_CURRENT_SOURCE_DIR}/scene.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/world.h
     ${CMAKE_CURRENT_SOURCE_DIR}/animation.h
     ${CMAKE_CURRENT_SOURCE_DIR}/animatedsprite.h
     ${CMAKE_CURRENT_SOURCE_DIR}/layer.h

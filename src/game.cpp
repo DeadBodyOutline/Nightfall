@@ -1,27 +1,27 @@
 #include <chrono>
 #include <random>
 
-#include <tmx/MapLoader.h>
-#include <tmx/MapObject.h>
-
 #include "game.h"
+#include "world.h"
 
-#include "player.h"
 #include "enemy.h"
-#include "reactor.h"
 #include "bullet.h"
 
 // XXX game should contain Scenes handling, update and input.
 // All game related things should live at some scene
 Game::Game(int width, int height, const std::string &title)
 {
-    m_window = std::make_shared<sf::RenderWindow>( sf::VideoMode(
-                width, height), title);
+    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height),
+            title);
 
     m_windowSize = m_window->getSize();
 
     m_window->setKeyRepeatEnabled(false);
     m_window->setVerticalSyncEnabled(true);
+
+    // game world, really it's just a scene
+    World *world = new World();
+    m_scenes.push_back(world);
 }
 
 Game::~Game()
@@ -31,108 +31,17 @@ Game::~Game()
 
 int Game::excelsior()
 {
-    // map loading
-    tmx::MapLoader ml("resources/maps");
-    ml.AddSearchPath("resources/tilesets");
-    ml.Load("first.tmx");
-
-    sf::Vector2u mapSize = ml.GetMapSize();
-
     // view setup
     sf::View view = sf::View(sf::FloatRect(0, mapSize.y - m_windowSize.y,
                 m_windowSize.x, m_windowSize.y));
     m_window->setView(view);
     //
 
-    // move it to a scene?
-    Player *sheerin;
-    Reactor *reactor;
-
-    std::vector<sf::Vector2f> spawnPoints;
-    std::vector<std::vector<sf::Vector2f> > wayPoints;
-
-    int enemiesIntoDarkness = 0;
-    bool gameOver = true;
 
     // Game scene
-    Scene scene;
+    //Scene scene;
 
-    // Layers
-    Layer enemiesLayer;
-    Layer mainLayer; // layer to hold Player and Reactor;
-
-    scene.addLayer(enemiesLayer);
-    scene.addLayer(mainLayer);
-
-    float enemySpawnTimeAcc = 0.f;
-
-    // CONFIGURATION YET
-    //const std::vector<tmx::MapLayer> &layers = ml.GetLayers();
-    //for (const auto &l : layers) {
-    for (const auto &l : ml.GetLayers()) {
-        if (l.name == "characters") {
-            for (const auto& o : l.objects) {
-                if (o.GetName() == "Sheerin") {
-                    sheerin = new Player("resources/sprites/chars.png", 0, 36);
-
-                    sheerin->setPosition(o.GetPosition());
-                    sheerin->setDirection(-1, 1);
-
-                    mainLayer.addSprite(*sheerin);
-                } else if (o.GetName() == "enemy1")
-                    spawnPoints.push_back(o.GetPosition());
-                else if (o.GetName() == "enemy2")
-                    spawnPoints.push_back(o.GetPosition());
-                else if (o.GetName() == "enemy3")
-                    spawnPoints.push_back(o.GetPosition());
-            }
-        }
-
-        // insert 'shrug' here
-        if (l.name == "waypoints") {
-            for (const auto& o : l.objects) {
-                if (o.GetName() == "waypoint1") {
-                    if (wayPoints.size() == 0) {
-                        std::vector<sf::Vector2f> v;
-                        v.push_back(o.GetPosition());
-
-                        wayPoints.push_back(v);
-                    } else
-                        wayPoints[0].push_back(o.GetPosition());
-                } else if (o.GetName() == "waypoint2") {
-                    if (wayPoints.size() == 1) {
-                        std::vector<sf::Vector2f> v;
-                        v.push_back(o.GetPosition());
-
-                        wayPoints.push_back(v);
-                    } else
-                        wayPoints[1].push_back(o.GetPosition());
-                } else if (o.GetName() == "waypoint3") {
-                    if (wayPoints.size() == 2) {
-                        std::vector<sf::Vector2f> v;
-                        v.push_back(o.GetPosition());
-
-                        wayPoints.push_back(v);
-                    } else
-                        wayPoints[2].push_back(o.GetPosition());
-                }
-            }
-        }
-
-        if (l.name == "objects") {
-            for (const auto &o : l.objects) {
-                if (o.GetName() == "reactor") {
-                    reactor = new Reactor("resources/sprites/reactor.png");
-                    // offset to properly collide withreacotr
-                    reactor->setPosition(o.GetPosition() - sf::Vector2f(0, 32));
-
-                    mainLayer.addSprite(*reactor);
-                }
-            }
-        }
-    }
-    //
-
+    // timing
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
     const sf::Time TimePerFrame = sf::seconds(1.f / 60.f); // XXX move it to a common file
     sf::Clock clock;
