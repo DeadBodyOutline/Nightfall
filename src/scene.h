@@ -17,11 +17,14 @@ public:
     void addLayer(Layer &layer);
     LayerContainer &layers();
 
-    void update(sf::Time delta = sf::Time::Zero);
+    virtual void update(sf::Time delta = sf::Time::Zero) = 0;
+    virtual void handleEvent(const sf::Event &event) = 0;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+protected:
 
 private:
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
+    // TODO update/draw layers
     LayerContainer m_layers;
 };
 

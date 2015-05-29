@@ -20,6 +20,9 @@ public:
     int excelsior(); // because reasons
 
 private:
+    void pollEvent();
+    void update(sf::Time delta = sf::Time::Zero);
+
     void draw();
 
     std::shared_ptr<sf::RenderWindow> m_window;
