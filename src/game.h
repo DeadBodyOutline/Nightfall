@@ -23,7 +23,7 @@ private:
     void pollEvent();
     void update(sf::Time delta = sf::Time::Zero);
 
-    void draw();
+    void render();
 
     std::shared_ptr<sf::RenderWindow> m_window;
     sf::Vector2u m_windowSize;

@@ -12,7 +12,6 @@ World::World()
     : Scene()
     , m_sheerin(nullptr)
     , m_reactor(nullptr)
-    , m_newPos(0, 0)
     , m_enemySpawnTimeAcc(0.f)
 {
     // map loading
@@ -118,7 +117,7 @@ World::~World()
 
 void World::update(sf::Time delta)
 {
-    m_mapLoader->UpdateQuadTree(sf::FloatRect(m_sheerin->position().x + m_newPos.x - 16, m_sheerin->position().y + m_newPos.y, 32, 32));
+    m_mapLoader->UpdateQuadTree(sf::FloatRect(m_sheerin->position().x - 16, m_sheerin->position().y, 32, 32));
     sf::FloatRect tR = m_sheerin->boundingBox();
     std::vector<tmx::MapObject*> objects = m_mapLoader->QueryQuadTree(tR);
 
@@ -133,10 +132,8 @@ void World::update(sf::Time delta)
             if (o->GetName() == "wall")
                 collide = true;
     }
-
-    if (!collide) {
-        m_sheerin->move(m_newPos.x, m_newPos.y);
-    }
+    // TODO adjust
+    m_sheerin->setCollide(collide);
 
     // bullet collision with blocks
     // TODO adjust
@@ -188,6 +185,35 @@ void World::update(sf::Time delta)
         //gameOver = true;
     //}
 
+
+    // adjust the player's weapon decay
+    calculateWeaponDecay();
+
+    // check if it's time to spawn a new enemy
+    m_enemySpawnTimeAcc += delta.asSeconds();
+    if (m_enemySpawnTimeAcc >= 2.f) {
+        spawnEnemies();
+        m_enemySpawnTimeAcc = 0.f;
+    }
+
+    // finally update scene child object
+    Scene::update(delta);
+}
+
+void World::handleEvent(const sf::Event &event)
+{
+    m_sheerin->handleEvent(event);
+}
+
+void World::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    target.draw(*m_mapLoader);
+
+    Scene::draw(target, states);
+}
+
+void World::calculateWeaponDecay()
+{
     sf::Vector2f sPos(m_sheerin->position().x, m_sheerin->position().y);
     sf::Vector2f rPos(m_reactor->position().x, m_reactor->position().y);
 
@@ -204,81 +230,30 @@ void World::update(sf::Time delta)
         m_sheerin->setWeaponDecay(d / 100);
     else
         m_sheerin->setWeaponDecay(1.f);
-
-
-    // spawn new enemies each 2 seconds
-    m_enemySpawnTimeAcc += delta.asSeconds();
-    if (m_enemySpawnTimeAcc >= 2.f) {
-        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-        std::default_random_engine gen(seed);
-        std::uniform_int_distribution<int> distr(0, m_spawnPoints.size() - 1);
-        int p = distr(gen);
-
-        distr = std::uniform_int_distribution<int>(0, 69); // 70 different characters
-        int character;
-
-        // avoid spawning Sheerin (char #36)
-        do {
-            character = distr(gen);
-        } while (character == 36);
-
-        Enemy *enemy = new Enemy("resources/sprites/chars.png", 0, character);
-        sf::Vector2f spawnPoint = m_spawnPoints[p];
-
-        enemy->setPosition(spawnPoint);
-        if (spawnPoint.x > m_reactor->position().x)
-            enemy->setDirection(-1, 1);
-
-        enemy->setTarget(m_wayPoints[p], m_reactor->position());
-        m_enemiesLayer.addSprite(*enemy);
-
-        m_enemySpawnTimeAcc = 0.f;
-    }
 }
 
-void World::handleEvent(const sf::Event &event)
+void World::spawnEnemies()
 {
-    std::cout << "wat\n";
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine gen(seed);
+    std::uniform_int_distribution<int> distr(0, m_spawnPoints.size() - 1);
+    int p = distr(gen);
 
-    if (event.type == sf::Event::MouseMoved) {
-        if (event.mouseMove.x > m_sheerin->position().x)
-            m_sheerin->setDirection(1, 1);
-        else if (event.mouseMove.x < m_sheerin->position().x)
-            m_sheerin->setDirection(-1, 1);
-    }
+    distr = std::uniform_int_distribution<int>(0, 69); // 70 different characters
+    int character;
 
-    // should we pass events to the characters?
-    if (event.type == sf::Event::MouseButtonPressed) {
-        if (event.mouseButton.button == sf::Mouse::Left) {
-            //sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-            //sheerin->shoot(mousePos.x, mousePos.y);
-            m_sheerin->shoot(event.mouseButton.x, event.mouseButton.y);
-        }
-    }
+    // avoid spawning Sheerin (char #36)
+    do {
+        character = distr(gen);
+    } while (character == 36);
 
-    float step = .1f;// TODO
+    Enemy *enemy = new Enemy("resources/sprites/chars.png", 0, character);
+    sf::Vector2f spawnPoint = m_spawnPoints[p];
 
-    // keyboard input
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        m_newPos.x += step;
-    }
+    enemy->setPosition(spawnPoint);
+    if (spawnPoint.x > m_reactor->position().x)
+        enemy->setDirection(-1, 1);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        m_newPos.x += -step;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        m_newPos.y += -step;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        m_newPos.y += step;
-    }
-}
-
-void World::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-    target.draw(*m_mapLoader);
-
-    Scene::draw(target, states);
+    enemy->setTarget(m_wayPoints[p], m_reactor->position());
+    m_enemiesLayer.addSprite(*enemy);
 }

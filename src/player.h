@@ -9,12 +9,16 @@ public:
     Player(const std::string &fileName, int x, int y);
     ~Player();
 
-    void shoot(int x, int y);
+    void setCollide(bool collide);
     void setWeaponDecay(float decay);
 
     void update(sf::Time delta = sf::Time::Zero);
 
+    void handleEvent(const sf::Event &event);
+
 private:
+    void shoot(int x, int y);
+
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     float m_weaponDecay;
@@ -26,6 +30,13 @@ private:
     float m_timeAccumulator;
 
     Sprite *m_bulletIndicator;
+
+    bool m_moveRight;
+    bool m_moveLeft;
+    bool m_moveUp;
+    bool m_moveDown;
+
+    bool m_collide;
 };
 
 #endif // __PLAYER_H__

@@ -45,16 +45,12 @@ int Game::excelsior()
 
         while (timeSinceLastUpdate > TimePerFrame) {
             timeSinceLastUpdate -= TimePerFrame;
-            //scene.update(TimePerFrame);
+
             pollEvent();
-            update(dt);
+            update(TimePerFrame);
         }
 
-        //m_window->draw(ml);
-        //m_window->draw(scene);
-
-        //m_window->display();
-        draw();
+        render();
     }
 
     return 0;
@@ -79,12 +75,12 @@ void Game::update(sf::Time delta)
     m_scenes[0]->update(delta); // XXX
 }
 
-void Game::draw()
+void Game::render()
 {
     m_window->clear(sf::Color(0, 0, 0));
 
-    m_window->setView(m_window->getDefaultView());
     m_window->draw(*m_scenes[0]); // XXX
+    m_window->setView(m_window->getDefaultView());
 
     m_window->display();
 }

@@ -8,7 +8,7 @@ Enemy::Enemy(const std::string &fileName, int x, int y)
     , m_deleteMe(false)
     , m_deleteTimeAccumulator(0.f)
 {
-    m_step = 0.05f;
+    m_step = 50.f;
 }
 
 Enemy::~Enemy()
@@ -89,8 +89,8 @@ void Enemy::update(sf::Time delta)
 
         float angle = atan2f(v.y, v.x);
 
-        float newX = cos(angle) * m_step;
-        float newY = sin(angle) * m_step;
+        float newX = cos(angle) * m_step * delta.asSeconds();
+        float newY = sin(angle) * m_step * delta.asSeconds();
 
         move(newX, newY);
     }

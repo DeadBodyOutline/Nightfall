@@ -2,7 +2,7 @@
 
 Bullet::Bullet(const std::string &fileName, int x, int y)
     : AnimatedSprite(fileName, 64, 128)
-    , m_step(1.f)
+    , m_step(500.f)
     , m_angle(0.f)
     , m_tileWidth(64)
     , m_tileHeight(64)
@@ -54,8 +54,8 @@ bool Bullet::deleteMe()
 void Bullet::update(sf::Time delta)
 {
     if (!m_engaged) {
-        float newX = cos(m_angle) * m_step;
-        float newY = sin(m_angle) * m_step;
+        float newX = cos(m_angle) * m_step * delta.asSeconds();
+        float newY = sin(m_angle) * m_step * delta.asSeconds();
 
         move(newX, newY);
     } else {

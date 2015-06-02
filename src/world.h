@@ -21,15 +21,14 @@ public:
     void handleEvent(const sf::Event &event);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-protected:
-
 private:
+    void calculateWeaponDecay();
+    void spawnEnemies();
+
     tmx::MapLoader *m_mapLoader; // XXX shared_ptr?
 
     Player *m_sheerin;
     Reactor *m_reactor;
-
-    sf::Vector2f m_newPos;
 
     Layer m_enemiesLayer;
     Layer m_mainLayer;
