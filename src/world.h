@@ -22,6 +22,7 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 private:
+    void checkCollisions();
     void calculateWeaponDecay();
     void spawnEnemies();
 

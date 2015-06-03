@@ -117,6 +117,54 @@ World::~World()
 
 void World::update(sf::Time delta)
 {
+    // TODO update view
+    // //TODO destroy enemies/bullets
+
+    // TODO object updates
+
+    // TODO collisions
+
+    checkCollisions();
+
+    // TODO destroy things (remove killed enemies, etc...)
+    // TODO spawn enemies
+    // TODO update positioning (outside view, collisions?)
+    //
+
+    // XXX mechanism to tell Game to finish world
+    //if (m_reactor->energyLevel() <= 0) {
+        //gameOver = true;
+    //}
+
+
+    // adjust the player's weapon decay
+    calculateWeaponDecay();
+
+    // check if it's time to spawn a new enemy
+    m_enemySpawnTimeAcc += delta.asSeconds();
+    if (m_enemySpawnTimeAcc >= 2.f) {
+        spawnEnemies();
+        m_enemySpawnTimeAcc = 0.f;
+    }
+
+    // finally update scene child object
+    Scene::update(delta);
+}
+
+void World::handleEvent(const sf::Event &event)
+{
+    m_sheerin->handleEvent(event);
+}
+
+void World::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    target.draw(*m_mapLoader);
+
+    Scene::draw(target, states);
+}
+
+void World::checkCollisions()
+{
     m_mapLoader->UpdateQuadTree(sf::FloatRect(m_sheerin->position().x - 16, m_sheerin->position().y, 32, 32));
     sf::FloatRect tR = m_sheerin->boundingBox();
     std::vector<tmx::MapObject*> objects = m_mapLoader->QueryQuadTree(tR);
@@ -179,37 +227,6 @@ void World::update(sf::Time delta)
         } else if (enemy->deleteMe())
             m_enemiesLayer.remove(*sprite);
     }
-
-    // XXX mechanism to tell Game to finish world
-    //if (m_reactor->energyLevel() <= 0) {
-        //gameOver = true;
-    //}
-
-
-    // adjust the player's weapon decay
-    calculateWeaponDecay();
-
-    // check if it's time to spawn a new enemy
-    m_enemySpawnTimeAcc += delta.asSeconds();
-    if (m_enemySpawnTimeAcc >= 2.f) {
-        spawnEnemies();
-        m_enemySpawnTimeAcc = 0.f;
-    }
-
-    // finally update scene child object
-    Scene::update(delta);
-}
-
-void World::handleEvent(const sf::Event &event)
-{
-    m_sheerin->handleEvent(event);
-}
-
-void World::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-    target.draw(*m_mapLoader);
-
-    Scene::draw(target, states);
 }
 
 void World::calculateWeaponDecay()
