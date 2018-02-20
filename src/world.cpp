@@ -165,7 +165,8 @@ void World::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void World::checkCollisions()
 {
-    m_mapLoader->UpdateQuadTree(sf::FloatRect(m_sheerin->position().x - 16, m_sheerin->position().y, 32, 32));
+    m_mapLoader->UpdateQuadTree(sf::FloatRect(0.f, 0.f, 800, 608));
+    //m_mapLoader->UpdateQuadTree(sf::FloatRect(m_sheerin->position().x - 16, m_sheerin->position().y, 32, 32));
     sf::FloatRect tR = m_sheerin->boundingBox();
     std::vector<tmx::MapObject*> objects = m_mapLoader->QueryQuadTree(tR);
 
